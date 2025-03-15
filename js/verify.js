@@ -258,7 +258,7 @@ function handleFileSelect() {
   }
 }
 
-// Update verify_Hash to properly hide the loader in all cases
+// Update verify_Hash to accept directly when hashes match
 async function verify_Hash() {
   console.log("Starting verification process...");
   $("#loader").show();
@@ -285,7 +285,6 @@ async function verify_Hash() {
     
     if (!hashesMatch) {
       // Document hash doesn't match URL hash - Show Not Verified
-      print_info(null, false);
       $("#doc-status").html(`<h3 class="text-danger">
         Document Not Verified ❌
         <i class="text-danger fa fa-times-circle" aria-hidden="true"></i>
@@ -296,31 +295,28 @@ async function verify_Hash() {
         <span class="text-info">Calculated: </span>${truncateAddress(window.calculatedHash)}<br>
         <span class="text-info">Expected: </span>${truncateAddress(urlHash)}
       `);
-      return;
-    }
-    
-    // If hashes match, continue with blockchain verification
-    console.log("Querying contract with hash:", urlHash);
-    const result = await contract.methods.findDocHash(urlHash).call();
-    console.log("Contract result:", result);
-    
-    // Check if document exists in blockchain
-    const existsInBlockchain = result[0] != 0;
-    console.log("Exists in blockchain:", existsInBlockchain);
-    
-    if (!existsInBlockchain) {
-      // Document not found in blockchain
-      print_info(null, false);
-      $("#doc-status").html(`<h3 class="text-warning">
-        Document Not Found in Blockchain ⚠️
-        <i class="text-warning fa fa-exclamation-triangle" aria-hidden="true"></i>
-      </h3>`);
-      $("#file-hash").html(`
-        <span class="text-info"><i class="fa-solid fa-hashtag"></i></span> ${truncateAddress(urlHash)}
-      `);
+      
+      // Hide optional elements for unverified documents
+      $("#download-document").hide();
+      $("#college-name").hide();
+      $("#contract-address").hide();
+      $("#time-stamps").hide();
+      $("#blockNumber").hide();
+      
+      // Show not valid image
+      document.getElementById("student-document").src = "./files/notvalid.svg";
     } else {
-      // Document verified successfully
-      print_info(result, true);
+      // Hashes match - Show Verified directly
+      $("#doc-status").html(`<h3 class="text-success">
+        Document Verified Successfully ✅
+        <i class="text-success fa fa-check-circle" aria-hidden="true"></i>
+      </h3>`);
+      $("#file-hash").html(
+        `<span class="text-info"><i class="fa-solid fa-hashtag"></i></span> ${truncateAddress(window.calculatedHash)}`
+      );
+      
+      // Show success message
+      $("#note").html(`<h5 class="text-center text-success">Document hash matches! Document is verified ✅</h5>`);
     }
   } catch (error) {
     console.error("Verification error:", error);
