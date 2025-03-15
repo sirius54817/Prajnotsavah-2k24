@@ -30,19 +30,22 @@
         z-index: 1000;
         top: 0;
         left: 0;
-        background-color: #111;
+        background-color: rgba(17, 17, 17, 0.95);
         overflow-x: hidden;
-        transition: 0.5s;
+        transition: all 0.3s ease-in-out;
         padding-top: 60px;
+        backdrop-filter: blur(10px);
       }
 
       .sidebar a {
-        padding: 8px 8px 8px 32px;
+        padding: 12px 15px 12px 32px;
         text-decoration: none;
         font-size: 18px;
         color: #818181;
-        display: block;
-        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
       }
 
       .sidebar a:hover {
@@ -75,10 +78,14 @@
         backdrop-filter: blur(8px);
         transition: all 0.3s ease;
         width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .openbtn:hover {
-        background-color: #444;
+        background-color: rgba(68, 68, 68, 0.8);
       }
 
       .brand-text {
@@ -97,8 +104,9 @@
       }
 
       .sidebar a.active {
-        color: #f1f1f1;
+        color: #fff;
         background: rgba(255, 23, 68, 0.2);
+        border-left: 4px solid var(--main-color);
       }
 
       .sidebar a:hover:not(.active) {
@@ -237,6 +245,17 @@
             padding: 8px 12px;
         }
     }
+
+    /* Update sidebar brand styles */
+    .sidebar-brand {
+      padding: 20px 15px;
+      color: var(--main-color);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
     </style>
   </head>
 
@@ -281,9 +300,9 @@
 
     <div id="mySidebar" class="sidebar">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-      <div class="sidebar-brand p-3 pl-8">
-        <i class="fa-solid fa-dragon home_text"></i>
-        <span class="home_text">amadeus</span>X
+      <div class="brand-text sidebar-brand">
+        <i class="fa-solid fa-dragon"></i>
+        <span>amadeus</span>X
       </div>
       <a href="index.html">
         <i class="fas fa-home me-2"></i>Home
@@ -493,13 +512,16 @@
         document.getElementById("main").style.marginLeft = "0";
     }
 
-    // Close sidebar when clicking outside
+    // Update click handler to be more specific
     document.addEventListener('click', function(event) {
         const sidebar = document.getElementById('mySidebar');
         const openbtn = document.querySelector('.openbtn');
+        const sidebarWidth = window.getComputedStyle(sidebar).width;
         
-        if (!sidebar.contains(event.target) && !openbtn.contains(event.target) && sidebar.style.width === "250px") {
-            closeNav();
+        if (!sidebar.contains(event.target) && 
+            !openbtn.contains(event.target) && 
+            sidebarWidth !== "0px") {
+          closeNav();
         }
     });
     </script>

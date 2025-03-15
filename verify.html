@@ -24,82 +24,164 @@
     <link rel="icon" href="./assets/images/icon.png" />
     <title>Verify Document</title>
     <style>
-        /* Sidebar styles */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1000;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
+      /* Sidebar styles */
+      .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        background-color: rgba(17, 17, 17, 0.95);
+        overflow-x: hidden;
+        transition: all 0.3s ease-in-out;
+        padding-top: 60px;
+        backdrop-filter: blur(10px);
+      }
 
-        .sidebar a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
+      .sidebar a {
+        padding: 12px 15px 12px 32px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
 
-        .sidebar a.active {
-            color: #f1f1f1;
-            background: rgba(255, 23, 68, 0.2);
-        }
+      .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        text-decoration: none;
+        color: #818181;
+      }
 
-        .sidebar a:hover:not(.active) {
-            color: #f1f1f1;
-            background: rgba(255, 255, 255, 0.1);
-        }
+      .sidebar a.active {
+        color: #fff;
+        background: rgba(255, 23, 68, 0.2);
+        border-left: 4px solid var(--main-color);
+      }
 
-        .top-nav-wrapper {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(17, 17, 17, 0.3);
-            backdrop-filter: blur(8px);
-            padding: 10px 20px;
-            border-radius: 12px;
-        }
+      .sidebar a:hover:not(.active) {
+        color: #f1f1f1;
+        background: rgba(255, 255, 255, 0.1);
+      }
 
-        #main {
-            transition: margin-left .5s;
-            padding-top: 80px;
-        }
+      .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: rgba(17, 17, 17, 0.8);
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        /* Other necessary styles from upload.html */
-        .openbtn {
-            font-size: 20px;
-            cursor: pointer;
-            background-color: rgba(17, 17, 17, 0.8);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-            width: 45px;
-        }
+      .openbtn:hover {
+        background-color: rgba(68, 68, 68, 0.8);
+      }
 
-        .brand-text {
-            font-size: 24px;
-            color: var(--main-color);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 15px;
+      .sidebar-brand {
+        padding: 20px 15px;
+        color: var(--main-color);
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .top-nav-wrapper {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+      }
+
+      .brand-text {
+        font-size: 24px;
+        color: var(--main-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        margin-left: 15px;
+        white-space: nowrap;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      #main {
+        transition: margin-left .5s;
+        padding-top: 80px;
+      }
+
+      @media (max-width: 768px) {
+        .brand-text span {
+          display: none;
         }
+        .auth-buttons button span {
+          display: none;
+        }
+        .auth-buttons button {
+          padding: 8px 12px;
+        }
+      }
+
+      /* Video background styles */
+      .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          rgba(26, 26, 26, 0.9),
+          rgba(255, 23, 68, 0.7)
+        );
+        z-index: -1;
+      }
+
+      /* Add this style to ensure the transaction-status is visible when needed */
+      .transaction-status.d-none {
+        display: none !important;
+      }
+      .transaction-status {
+        display: flex !important;
+      }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   </head>
   <body>
     <!-- loading Circular dots... -->
@@ -116,116 +198,118 @@
       </div>
     </div>
 
-    <!-- navigation bar -->
-    <nav class="navbar navbar-expand-lg bg-light py-3 navbar-dark">
-      <div class="container">
-        <a class="navbar-brand" href="index.html">
-          <i class="fa-solid fa-dragon home_text"></i>
-          <span class="home_text">amadeus</span>X
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
+    <!-- Replace navbar with new top nav and sidebar -->
+    <div class="top-nav-wrapper">
+      <button class="openbtn" onclick="openNav()">☰</button>
+      <div class="brand-text">
+        <i class="fa-solid fa-dragon home_text"></i>
+        <span class="home_text">amadeus</span>X
+      </div>
+      <div class="auth-buttons">
+        <button id="loginButton" onclick="connect()" class="btn main-button">
+          <i class="fas fa-wallet me-2"></i>Login
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="upload.html">Upload</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="verify.html">Verify</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="delete.html">Delete</a>
-            </li>
+        <button id="logoutButton" onclick="disconnect()" class="btn main-button">
+          <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </button>
+      </div>
+    </div>
 
-            <li class="nav-item">
-              <a class="nav-link" href="admin.html">Admin</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about.html">Team</a>
-            </li>
-          </ul>
-          <div class="d-flex">
-            <button
-              id="loginButton"
-              onclick="connect()"
-              class="btn main-button"
-            >
-              Login
+    <div id="mySidebar" class="sidebar">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+      <div class="brand-text sidebar-brand">
+        <i class="fa-solid fa-dragon"></i>
+        <span>amadeus</span>X
+      </div>
+      <a href="index.html">
+        <i class="fas fa-home me-2"></i>Home
+      </a>
+      <a href="upload.html">
+        <i class="fas fa-upload me-2"></i>Upload
+      </a>
+      <a href="verify.html" class="active">
+        <i class="fas fa-check-circle me-2"></i>Verify
+      </a>
+      <a href="delete.html">
+        <i class="fas fa-trash me-2"></i>Delete
+      </a>
+      <a href="admin.html">
+        <i class="fas fa-user-shield me-2"></i>Admin
+      </a>
+      <a href="about.html">
+        <i class="fas fa-users me-2"></i>Team
+      </a>
+    </div>
+
+    <div id="main">
+      <div class="container">
+        <!-- Add video background -->
+        <div class="video-background">
+          <video autoplay muted loop id="myVideo">
+            <source src="./files/earth.mp4" type="video/mp4">
+          </video>
+          <div class="video-overlay"></div>
+        </div>
+
+        <!-- upload form -->
+        <div data-aos="zoom-in" class="col p-3 data-upload my-3 mx-md-2">
+          <div class="form-group">
+            <label for="doc-file" class="form-label">Select Document to Verify</label>
+            <input type="file" class="form-control" id="doc-file" required>
+            <small class="form-text text-muted">Upload the document you want to verify</small>
+            <div id="note" class="mt-2 text-center">
+              <h5 class="text-warning">Upload a document to verify its authenticity</h5>
+            </div>
+            <div class="text-center mt-2">
+              <img id="loader" src="files/loader.svg" alt="loader" style="display:none;" />
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 mt-3">
+            <button onclick="calculateHashAndWait()" class="btn btn-primary" id="calculate-hash-btn">
+              <i class="fas fa-hashtag me-2"></i>Calculate Hash
             </button>
-            <button
-              id="logoutButton"
-              onclick="disconnect()"
-              class="btn main-button"
-            >
-              Logout
+            
+            <!-- Always show the verify button but disable it until hash is calculated -->
+            <button id="upload_file_button" onclick="verify_Hash()" class="btn btn-success mt-2" disabled>
+              <i class="fas fa-check-circle me-2"></i>Verify Document
             </button>
           </div>
         </div>
-      </div>
-    </nav>
-    <div id="main">
-        <div class="container">
-            <!-- upload form -->
-            <video autoplay muted loop id="myVideo1">
-                <source src="./files/4kbg.mp4" type="video/mp4" />
-            </video>
-            <div data-aos="zoom-in" class="col p-3 data-upload my-3 mx-md-2">
-                <input onchange="get_Sha3()" id="doc-file" type="file" />
-                <span id="note" class="text-danger"></span>
-                <img id="loader" src="files/loader.svg" alt="loader" />
-                <input
-                    onclick="verify_Hash()"
-                    class="btn mt-5 upload-button d-block main-button"
-                    type="button"
-                    value="Verify"
-                    id="upload_file_button"
-                />
-            </div>
-            <!-- Verification result -->
-            <div class="box d-none my-3 row gx-0 mx-md-2 transaction-status col-lg">
-                <div class="left col-lg-6 p-3 d-flex flex-column">
-                    <span class="p-2 info text-center" id="doc-status"></span>
-                    <span class="p-2 info" id="file-hash"></span>
-                    <span class="p-2 info" id="contract-address"></span>
-                    <span class="p-2 info" id="time-stamps"></span>
-                    <span class="p-2 info" id="blockNumber"></span>
-                    <span class="p-2 info" id="college-name"></span>
+        <!-- Verification result -->
+        <div class="box d-none my-3 row gx-0 mx-md-2 transaction-status col-lg">
+          <div class="left col-lg-6 p-3 d-flex flex-column">
+            <span class="p-2 info text-center" id="doc-status"></span>
+            <span class="p-2 info" id="file-hash"></span>
+            <span class="p-2 info" id="contract-address"></span>
+            <span class="p-2 info" id="time-stamps"></span>
+            <span class="p-2 info" id="blockNumber"></span>
+            <span class="p-2 info" id="college-name"></span>
 
-                    <span class="d-flex justify-content-center">
-                        <a
-                            title="View Certificate on IPFS"
-                            href="#"
-                            id="download-document"
-                            class="download-link"
-                            target="_blank"
-                        >
-                            View Certificate
-                        </a>
-                    </span>
-                </div>
-                <div
-                    class="right col-lg-6 d-flex justify-content-center align-items-center"
-                >
-                    <!-- <object class="mt-4"  id="student-document" data="" alt="student-document"></object> -->
-                    <img class="mt-4" id="student-document" alt="Student document" />
-                </div>
-            </div>
+            <span class="d-flex justify-content-center">
+              <a
+                title="View Certificate on IPFS"
+                href="#"
+                id="download-document"
+                class="download-link"
+                target="_blank"
+              >
+                View Certificate
+              </a>
+            </span>
+          </div>
+          <div
+            class="right col-lg-6 d-flex justify-content-center align-items-center"
+          >
+            <img src="https://i.ibb.co/39PJRBk5/paper-2.jpg" class="mt-4" id="student-document" alt="Student document" />
+          </div>
         </div>
+      </div>
     </div>
-    <footer class="footer-dark">
-      <div class="container">
+
+    <!-- Footer -->
+    <div class="container">
+      <footer class="footer-dark">
         <div class="row">
           <div class="col-sm-6 col-md-3 item">
             <p>Services</p>
@@ -247,48 +331,34 @@
               <i class="fa-solid fa-dragon"></i>
               amadeusX
             </p>
-            <!-- <a href="https://www.flaticon.com/free-icons/blockchain" title="blockchain icons">Blockchain icons created by photo3idea_studio - Flaticon</a> -->
             <p>
               This website is useful to secure your certificates using
               blockchain technology.
             </p>
           </div>
           <div class="col item social">
-            <a
-              href="https://www.linkedin.com/in/kvhkc"
-              ><i class="fa-brands fa-linkedin"></i
-            ></a>
-            <a href="https://instagram.com/solstxce"
-              ><i class="fa-brands fa-instagram"></i
-            ></a>
-            <a href="https://github.com/solstxce"
-              ><i class="fa-brands fa-github"></i
-            ></a>
-            <a href="https://wa.me/+919876543210"
-              ><i class="fa-brands fa-whatsapp"></i
-            ></a>
-            <a href="https://t.me/+919876543210"
-              ><i class="fa-brands fa-telegram"></i
-            ></a>
+            <a href="https://www.linkedin.com/in/kvhkc"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://instagram.com/solstxce"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://github.com/solstxce"><i class="fa-brands fa-github"></i></a>
+            <a href="https://wa.me/+919876543210"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://t.me/+919876543210"><i class="fa-brands fa-telegram"></i></a>
           </div>
         </div>
         <p class="copyright">amadeusX ©2024</p>
-      </div>
-    </footer>
+      </footer>
+    </div>
+
+    <!-- Floating buttons -->
     <div>
-      <a
-        title="Send Email"
-        href="mailto:adm.amadeusx@gmail.com?subject=From amadeusX Site"
-      >
+      <a href="mailto:adm.amadeusx@gmail.com?subject=From amadeusX Site">
         <i class="mail-us fa-solid fa-headset"></i>
       </a>
     </div>
     <i onclick="topFunction()" id="scroll-btn" class="fa-solid fa-angle-up"></i>
+
+    <!-- Scripts -->
     <script src="./js/script.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.js"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     function openNav() {
@@ -305,9 +375,12 @@
     document.addEventListener('click', function(event) {
         const sidebar = document.getElementById('mySidebar');
         const openbtn = document.querySelector('.openbtn');
+        const sidebarWidth = window.getComputedStyle(sidebar).width;
         
-        if (!sidebar.contains(event.target) && !openbtn.contains(event.target) && sidebar.style.width === "250px") {
-            closeNav();
+        if (!sidebar.contains(event.target) && 
+            !openbtn.contains(event.target) && 
+            sidebarWidth !== "0px") {
+          closeNav();
         }
     });
     </script>

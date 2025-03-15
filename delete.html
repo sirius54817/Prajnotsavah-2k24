@@ -14,63 +14,183 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <link rel="stylesheet" href="css/main.css" />
     <link rel="icon" href="./assets/images/icon.png" />
     <title>Delete Document</title>
+    <style>
+      /* Add sidebar styles */
+      .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        background-color: rgba(17, 17, 17, 0.95);
+        overflow-x: hidden;
+        transition: all 0.3s ease-in-out;
+        padding-top: 60px;
+        backdrop-filter: blur(10px);
+      }
+
+      .sidebar a {
+        padding: 12px 15px 12px 32px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        text-decoration: none;
+        color: #818181;
+      }
+
+      .sidebar a.active {
+        color: #fff;
+        background: rgba(255, 23, 68, 0.2);
+        border-left: 4px solid var(--main-color);
+      }
+
+      .sidebar a:hover:not(.active) {
+        color: #f1f1f1;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: rgba(17, 17, 17, 0.8);
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .openbtn:hover {
+        background-color: rgba(68, 68, 68, 0.8);
+      }
+
+      .sidebar-brand {
+        padding: 20px 15px;
+        color: var(--main-color);
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .top-nav-wrapper {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+      }
+
+      .brand-text {
+        font-size: 24px;
+        color: var(--main-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        margin-left: 15px;
+        white-space: nowrap;
+      }
+
+      .auth-buttons {
+        margin-left: auto;
+        display: flex;
+        gap: 10px;
+      }
+
+      #main {
+        transition: margin-left .5s;
+        padding-top: 80px;
+      }
+
+      @media (max-width: 768px) {
+        .brand-text span {
+          display: none;
+        }
+        .auth-buttons button span {
+          display: none;
+        }
+        .auth-buttons button {
+          padding: 8px 12px;
+        }
+      }
+    </style>
   </head>
 
   <body>
     <div class="loader-wraper">
       <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
-    <!-----------------------------navbBar Start-------------------->
-  <!--NavBar Start-->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light py-3 navbar-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">
+    <!-- Replace navbar with new top nav and sidebar -->
+    <div class="top-nav-wrapper">
+      <button class="openbtn" onclick="openNav()">☰</button>
+      <div class="brand-text">
         <i class="fa-solid fa-dragon home_text"></i>
-        <span class="home_text">falkon</span>X
-        </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link " aria-current="page" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link  " href="upload.html">Upload </a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link" href="verify.html">Verify </a>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link active" href="delete.html">Delete </a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="admin.html">Admin</a>
-            </li>          
-            <li class="nav-item">
-          <a class="nav-link" href="about.html">Team</a>
-          </li>
-      </ul>
-      <div class="d-flex">
-        <button
-          id="loginButton"
-          onclick="connect()"
-          class="btn main-button"
-        >Login</button>
-        <button
-          id="logoutButton"
-          onclick="disconnect()"
-          class="btn main-button"
-        > Logout</button>
+        <span class="home_text">amadeus</span>X
       </div>
+      <div class="auth-buttons">
+        <button id="loginButton" onclick="connect()" class="btn main-button">
+          <i class="fas fa-wallet me-2"></i>Login
+        </button>
+        <button id="logoutButton" onclick="disconnect()" class="btn main-button">
+          <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </button>
       </div>
     </div>
-    </nav>
-    <!---------------------NavBar End-------------------->
 
-    <!--=====================Upload Document===========================-->
+    <div id="mySidebar" class="sidebar">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+      <div class="brand-text sidebar-brand">
+        <i class="fa-solid fa-dragon"></i>
+        <span>amadeus</span>X
+      </div>
+      <a href="index.html">
+        <i class="fas fa-home me-2"></i>Home
+      </a>
+      <a href="upload.html">
+        <i class="fas fa-upload me-2"></i>Upload
+      </a>
+      <a href="verify.html">
+        <i class="fas fa-check-circle me-2"></i>Verify
+      </a>
+      <a href="delete.html" class="active">
+        <i class="fas fa-trash me-2"></i>Delete
+      </a>
+      <a href="admin.html">
+        <i class="fas fa-user-shield me-2"></i>Admin
+      </a>
+      <a href="about.html">
+        <i class="fas fa-users me-2"></i>Team
+      </a>
+    </div>
+
+    <!-- Add main wrapper -->
+    <div id="main">
+      <!--=====================Upload Document===========================-->
 
       <div class="container">
         <video autoplay muted loop id="myVideo1">
@@ -170,5 +290,28 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+    }
+
+    document.addEventListener('click', function(event) {
+        const sidebar = document.getElementById('mySidebar');
+        const openbtn = document.querySelector('.openbtn');
+        const sidebarWidth = window.getComputedStyle(sidebar).width;
+        
+        if (!sidebar.contains(event.target) && 
+            !openbtn.contains(event.target) && 
+            sidebarWidth !== "0px") {
+          closeNav();
+        }
+    });
+    </script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 window.CONTRACT = {
-  address: "0x10A5668F4E666aec581673334bFB1945c4B23086",
+  address: "0x2DbbfA9340BD61C59E4A6aFAC07942755054A64b",
   network: "https://ethereum-sepolia-rpc.publicnode.com",
   explore: "https://sepolia.etherscan.io/",
   abi:[
@@ -307,6 +307,15 @@ window.onload = async () => {
     // alert("Please download metamask extension first.\nhttps://metamask.io/download/");
     // window.location = "https://metamask.io/download/"
   }
+
+  // Add this line to check exporter status on page load
+  const status = await checkExporterStatus();
+  console.log("Authorization status:", status);
+  
+  if (status && !status.isExporter && !status.isOwner) {
+    $("#note").html(`<h5 class="text-danger">Your wallet (${truncateAddress(status.address)}) is not authorized as an exporter</h5>`);
+    $("#upload_file_button").attr("disabled", true);
+  }
 };
 
 function hide_txInfo() {
@@ -381,23 +390,41 @@ function printUploadInfo(result) {
 
 async function sendHash(fileHash, ipfsCid) {
     try {
+        // First check if user is authorized
+        const status = await checkExporterStatus();
+        if (!status.isExporter && !status.isOwner) {
+            throw new Error("Your wallet is not authorized as an exporter");
+        }
+        
         $("#loader").removeClass("d-none");
         $("#upload_file_button").slideUp();
         $("#note").html(`<h5 class="text-info">Please confirm the transaction 🙂</h5>`);
-        $("#upload_file_button").attr("disabled", true);
         
-        // Convert fileHash to bytes32 as required by the contract
-        const hashBytes32 = window.hashedfile; // Using the already hashed file from get_Sha3()
+        // Log the parameters being sent to the contract
+        console.log("Sending hash to contract:", {
+            contractAddress: window.CONTRACT.address,
+            fileHash: window.hashedfile,
+            ipfsCid: ipfsCid,
+            fromAddress: window.userAddress
+        });
         
         const result = await window.contract.methods
-            .addDocHash(hashBytes32, ipfsCid)
+            .addDocHash(window.hashedfile, ipfsCid)
             .send({ from: window.userAddress })
             .on("transactionHash", function (hash) {
+                console.log("Transaction hash:", hash);
                 $("#note").html(`<h5 class="text-info p-1 text-center">Please wait for transaction to be mined 😴</h5>`);
             })
             .on("receipt", function (receipt) {
+                console.log("Transaction receipt:", receipt);
                 printUploadInfo(receipt);
                 generateQRCode();
+            })
+            .on("error", function(error) {
+                console.error("Transaction error:", error);
+                $("#note").html(`<h5 class="text-danger">Transaction error: ${error.message}</h5>`);
+                $("#loader").addClass("d-none");
+                $("#upload_file_button").slideDown();
             });
             
         return result;
@@ -522,10 +549,12 @@ function get_Sha3() {
       // var SHA256 = new Hashes.SHA256();
       // = SHA256.hex(evt.target.result);
       window.hashedfile = web3.utils.soliditySha3(evt.target.result);
+      var hashf = window.hashedfile;
       console.log(`Document Hash : ${window.hashedfile}`);
       $("#note").html(
         `<h5 class="text-center text-info">Document Hashed  😎 </h5>`
       );
+      return hashf;
     };
     reader.onerror = function (evt) {
       console.log("error reading file");
@@ -533,6 +562,7 @@ function get_Sha3() {
   } else {
     window.hashedfile = null;
   }
+  
 }
 
 function disconnect() {
@@ -837,4 +867,82 @@ function printTransactions(data) {
     a.appendChild(num);
     main.prepend(a);
   }
+}
+
+async function checkExporterStatus() {
+  try {
+    // Get current user address
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    const userAddress = accounts[0];
+    console.log("Current user address:", userAddress);
+    
+    // Initialize contract with the CORRECT address
+    const web3 = new Web3(window.ethereum);
+    const contractAddress = "0x10a5668f4e666aec581673334bfb1945c4b23086"; // Use the address from the error
+    const contract = new web3.eth.Contract(window.CONTRACT.abi, contractAddress);
+    
+    // Check if user is an exporter
+    const exporterInfo = await contract.methods.getExporterInfo(userAddress).call();
+    console.log("Exporter info:", exporterInfo);
+    
+    // Check if user is the owner
+    const owner = await contract.methods.owner().call();
+    console.log("Contract owner:", owner);
+    console.log("Is user the owner:", owner.toLowerCase() === userAddress.toLowerCase());
+    
+    return {
+      address: userAddress,
+      isExporter: exporterInfo && exporterInfo.length > 0,
+      isOwner: owner.toLowerCase() === userAddress.toLowerCase(),
+      exporterInfo: exporterInfo
+    };
+  } catch (error) {
+    console.error("Error checking exporter status:", error);
+    return { error: error.message };
+  }
+}
+
+async function checkIfHashExists(hash) {
+    try {
+        const result = await window.contract.methods.findDocHash(hash).call();
+        // If blockNumber is not 0, the hash exists
+        return result[0] != 0;
+    } catch (error) {
+        console.error("Error checking hash existence:", error);
+        return false;
+    }
+}
+
+async function uploadToIPFSAndBlockchain() {
+    try {
+        if (!window.hashedfile) {
+            $("#note").html(`<h5 class="text-danger">Please select a file first</h5>`);
+            return;
+        }
+        
+        // Check if hash already exists
+        const hashExists = await checkIfHashExists(window.hashedfile);
+        if (hashExists) {
+            $("#note").html(`<h5 class="text-danger">This document has already been registered</h5>`);
+            return;
+        }
+        
+        // Continue with IPFS upload and blockchain transaction
+        // ... existing code ...
+    } catch (error) {
+        console.error("Upload error:", error);
+        $("#note").html(`<h5 class="text-danger">Upload failed: ${error.message}</h5>`);
+    }
+}
+
+function ensureContractInitialized() {
+    if (!window.contract) {
+        window.web3 = new Web3(window.ethereum);
+        window.contract = new window.web3.eth.Contract(
+            window.CONTRACT.abi,
+            "0x10a5668f4e666aec581673334bfb1945c4b23086" // Use the correct address
+        );
+        console.log("Contract initialized with address:", window.contract._address);
+    }
+    return window.contract;
 }
