@@ -12,7 +12,6 @@
     <script src="./js/aos.js"></script>
     <script src="node_modules\web3\dist\web3.min.js"></script>
     <script src="js/verify.js"></script>
-    <script src="js/App.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -266,7 +265,7 @@
           </div>
 
           <div class="d-grid gap-2 mt-3">
-            <button onclick="calculateHashAndWait()" class="btn btn-primary" id="calculate-hash-btn">
+            <button onclick="get_Sha3()" class="btn btn-primary" id="calculate-hash-btn">
               <i class="fas fa-hashtag me-2"></i>Calculate Hash
             </button>
             
@@ -375,6 +374,9 @@
     document.addEventListener('click', function(event) {
         const sidebar = document.getElementById('mySidebar');
         const openbtn = document.querySelector('.openbtn');
+        
+        if (!sidebar || !openbtn) return; // Guard against null
+        
         const sidebarWidth = window.getComputedStyle(sidebar).width;
         
         if (!sidebar.contains(event.target) && 

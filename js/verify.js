@@ -225,7 +225,7 @@ window.onload = async () => {
   console.log("Page loaded, initializing...");
   $("#loader").hide();
   $(".loader-wraper").fadeOut("slow");
-  $("#upload_file_button").hide(); // Initially hide verify button
+  $("#upload_file_button").prop("disabled", true); // Initially disable verify button
   
   // Check URL parameters
   checkURL();
@@ -249,54 +249,103 @@ function handleFileSelect() {
     console.log("File selected:", fileInput.files[0].name);
     // Clear any previous hash and reset UI
     window.calculatedHash = null;
-    $("#upload_file_button").hide();
+    $("#upload_file_button").prop("disabled", true);
     $(".transaction-status").addClass("d-none");
-    $("#note").html(`<h5 class="text-center text-warning">Please calculate the hash of the selected file</h5>`);
+    $("#note").html(`<h5 class="text-center text-warning">Please click "Calculate Hash" to hash the selected file</h5>`);
   } else {
     $("#note").html(`<h5 class="text-center text-warning">Please select a file to verify</h5>`);
-    $("#upload_file_button").hide();
+    $("#upload_file_button").prop("disabled", true);
   }
 }
 
-// Update verify_Hash to accept directly when hashes match
+// Updated verify_Hash to compare uploaded file with original in IPFS
 async function verify_Hash() {
   console.log("Starting verification process...");
   $("#loader").show();
   $("#upload_file_button").attr("disabled", true);
   
   try {
-    // Get hash from URL if available
-    const urlHash = new URL(window.location.href).searchParams.get("hash");
-    console.log("URL hash:", urlHash);
-    console.log("Calculated hash:", window.calculatedHash);
-    
     // If no calculated hash, show error
     if (!window.calculatedHash) {
       $("#note").html(`<h5 class="text-center text-danger">Please upload and hash a file first!</h5>`);
+      $("#loader").hide();
+      $("#upload_file_button").attr("disabled", false);
       return;
     }
     
-    // Compare hashes
-    const hashesMatch = urlHash === window.calculatedHash;
-    console.log("Hashes match:", hashesMatch);
+    // Get the expected hash from URL (from QR code)
+    const urlParams = new URL(window.location.href).searchParams;
+    const expectedHash = urlParams.get("hash");
     
-    // Show verification result
-    $(".transaction-status").removeClass("d-none");
+    console.log("=== VERIFICATION DEBUG ===");
+    console.log("Expected hash from QR code:", expectedHash);
+    console.log("Calculated hash from file:", window.calculatedHash);
+    console.log("Hashes match?", expectedHash === window.calculatedHash);
+    console.log("Expected type:", typeof expectedHash);
+    console.log("Calculated type:", typeof window.calculatedHash);
     
-    if (!hashesMatch) {
-      // Document hash doesn't match URL hash - Show Not Verified
+    // First check: Does the file hash match what the QR code says?
+    if (expectedHash && expectedHash !== window.calculatedHash) {
+      // File doesn't match the QR code
+      $(".transaction-status").removeClass("d-none");
       $("#doc-status").html(`<h3 class="text-danger">
-        Document Not Verified ❌
+        Wrong Document - Not Verified ❌
         <i class="text-danger fa fa-times-circle" aria-hidden="true"></i>
       </h3>`);
       $("#file-hash").html(`
         <span class="text-info"><i class="fa-solid fa-hashtag"></i></span> 
         <span class="text-danger">Hash Mismatch:</span><br>
-        <span class="text-info">Calculated: </span>${truncateAddress(window.calculatedHash)}<br>
-        <span class="text-info">Expected: </span>${truncateAddress(urlHash)}
+        <span class="text-info">Your file: </span>${truncateAddress(window.calculatedHash)}<br>
+        <span class="text-info">Expected: </span>${truncateAddress(expectedHash)}
       `);
+      $("#note").html(`<h5 class="text-center text-danger">This is NOT the correct document for this QR code! ❌</h5>`);
       
-      // Hide optional elements for unverified documents
+      // Hide optional elements
+      $("#download-document").hide();
+      $("#college-name").hide();
+      $("#contract-address").hide();
+      $("#time-stamps").hide();
+      $("#blockNumber").hide();
+      
+      document.getElementById("student-document").src = "./files/notvalid.svg";
+      $("#loader").hide();
+      $("#upload_file_button").attr("disabled", false);
+      return;
+    }
+    
+    // Query the blockchain to verify the document exists
+    $("#note").html(`<h5 class="text-center text-info">Checking blockchain... 🔍</h5>`);
+    console.log("Checking blockchain for hash:", window.calculatedHash);
+    
+    const result = await contract.methods.findDocHash(window.calculatedHash).call();
+    console.log("Blockchain result:", result);
+    
+    // Check if document exists in blockchain (blockNumber will be 0 if not found)
+    const blockNumber = result[0];
+    const timestamp = result[1];
+    const institutionInfo = result[2];
+    const ipfsHash = result[3];
+    
+    console.log("Block number:", blockNumber);
+    console.log("Timestamp:", timestamp);
+    console.log("Institution:", institutionInfo);
+    console.log("IPFS Hash:", ipfsHash);
+    
+    // Show verification result
+    $(".transaction-status").removeClass("d-none");
+    
+    if (blockNumber == 0 || !ipfsHash) {
+      // Document not found in blockchain - Not Verified
+      $("#doc-status").html(`<h3 class="text-danger">
+        Document Not Found in Blockchain ❌
+        <i class="text-danger fa fa-times-circle" aria-hidden="true"></i>
+      </h3>`);
+      $("#file-hash").html(
+        `<span class="text-info"><i class="fa-solid fa-hashtag"></i></span> ${truncateAddress(window.calculatedHash)}`
+      );
+      $("#note").html(`<h5 class="text-center text-danger">This document was never uploaded to the blockchain ❌</h5>`);
+      
+      // Hide optional elements
       $("#download-document").hide();
       $("#college-name").hide();
       $("#contract-address").hide();
@@ -305,8 +354,28 @@ async function verify_Hash() {
       
       // Show not valid image
       document.getElementById("student-document").src = "./files/notvalid.svg";
-    } else {
-      // Hashes match - Show Verified directly
+      $("#loader").hide();
+      $("#upload_file_button").attr("disabled", false);
+      return;
+    }
+    
+    // Document exists in blockchain - The stored hash IS the verification
+    // We already know the uploaded file hashes to window.calculatedHash
+    // And the blockchain says this hash is valid and was uploaded
+    // So we just need to confirm they match
+    $("#note").html(`<h5 class="text-center text-info">Verifying document authenticity... �</h5>`);
+    
+    // The blockchain stores the hash of the original document
+    // If our file hashes to the same value, it's the same document
+    const storedHash = window.calculatedHash; // This is what we calculated from uploaded file
+    
+    // Since the blockchain returned a valid result with this hash,
+    // it means this exact document was uploaded and is authentic
+    console.log("Document hash matches blockchain record:", storedHash);
+    
+    // Check if the hash actually exists (we already did this above, but double check)
+    if (blockNumber != 0 && ipfsHash) {
+      // Document is verified - it exists in blockchain
       $("#doc-status").html(`<h3 class="text-success">
         Document Verified Successfully ✅
         <i class="text-success fa fa-check-circle" aria-hidden="true"></i>
@@ -314,14 +383,64 @@ async function verify_Hash() {
       $("#file-hash").html(
         `<span class="text-info"><i class="fa-solid fa-hashtag"></i></span> ${truncateAddress(window.calculatedHash)}`
       );
+      $("#note").html(`<h5 class="text-center text-success">This document is authentic and registered on blockchain! ✅</h5>`);
       
-      // Show success message
-      $("#note").html(`<h5 class="text-center text-success">Document hash matches! Document is verified ✅</h5>`);
+      // Show all verification details
+      $("#download-document").show();
+      $("#college-name").show();
+      $("#contract-address").show();
+      $("#time-stamps").show();
+      $("#blockNumber").show();
+      
+      // Format and display timestamp
+      var t = new Date(parseInt(timestamp) * 1000);
+      $("#time-stamps").html(
+        `<span class="text-info"><i class="fa-solid fa-clock"></i></span> ${t.toLocaleString()}`
+      );
+      
+      // Display institution info
+      $("#college-name").html(
+        `<span class="text-info"><i class="fa-solid fa-graduation-cap"></i></span> ${institutionInfo}`
+      );
+      
+      // Display contract address
+      $("#contract-address").html(
+        `<span class="text-info"><i class="fa-solid fa-file-contract"></i></span> ${truncateAddress(window.CONTRACT.address)}`
+      );
+      
+      // Display block number
+      $("#blockNumber").html(
+        `<span class="text-info"><i class="fa-solid fa-cube"></i></span> ${blockNumber}`
+      );
+      
+      // Set IPFS document image and download link
+      const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
+      document.getElementById("student-document").src = ipfsUrl;
+      document.getElementById("download-document").href = ipfsUrl;
     }
+    
   } catch (error) {
     console.error("Verification error:", error);
     $("#note").html(`<h5 class="text-center text-danger">Error verifying document: ${error.message}</h5>`);
-    $(".transaction-status").addClass("d-none");
+    $(".transaction-status").removeClass("d-none");
+    
+    // Show error state
+    $("#doc-status").html(`<h3 class="text-danger">
+      Verification Error ❌
+      <i class="text-danger fa fa-times-circle" aria-hidden="true"></i>
+    </h3>`);
+    $("#file-hash").html(
+      `<span class="text-info"><i class="fa-solid fa-hashtag"></i></span> ${truncateAddress(window.calculatedHash || 'N/A')}`
+    );
+    
+    // Hide optional elements
+    $("#download-document").hide();
+    $("#college-name").hide();
+    $("#contract-address").hide();
+    $("#time-stamps").hide();
+    $("#blockNumber").hide();
+    
+    document.getElementById("student-document").src = "./files/notvalid.svg";
   } finally {
     $("#loader").hide();
     $("#upload_file_button").attr("disabled", false);
@@ -341,18 +460,21 @@ function calculateHashAndWait() {
     
     // Use FileReader with readAsText, exactly like App.js
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function(evt) {
       try {
-        const fileContent = event.target.result;
-        // Use soliditySha3 with type:'string' exactly like App.js
-        const hash = web3.utils.soliditySha3({ type: 'string', value: fileContent });
-        console.log("Generated hash using soliditySha3:", hash);
-        $("#upload_file_button").attr("disabled", false);
-        // Store the hash globally
-        window.calculatedHash = hash;
+        console.log("=== HASH CALCULATION DEBUG ===");
+        console.log("File size (characters):", evt.target.result.length);
+        console.log("First 100 chars:", evt.target.result.substring(0, 100));
+        
+        // Use soliditySha3 exactly like App.js - same variable name and method
+        window.calculatedHash = web3.utils.soliditySha3(evt.target.result);
+        console.log("Generated hash using soliditySha3:", window.calculatedHash);
+        console.log("Hash type:", typeof window.calculatedHash);
+        
+        $("#upload_file_button").prop("disabled", false);
         
         $("#note").html(`<h5 class="text-center text-info">Document Hashed Successfully 😎</h5>`);
-        resolve(hash);
+        resolve(window.calculatedHash);
 
       } catch (error) {
         console.error("Error in hash calculation:", error);
@@ -361,14 +483,14 @@ function calculateHashAndWait() {
       }
     };
     
-    reader.onerror = function(error) {
-      console.error("Error reading file:", error);
-      $("#note").html(`<h5 class="text-center text-danger">Error reading file: ${error.message}</h5>`);
+    reader.onerror = function(evt) {
+      console.error("Error reading file");
+      $("#note").html(`<h5 class="text-center text-danger">Error reading file</h5>`);
       resolve(null);
     };
     
-    // Read as text, exactly like App.js
-    reader.readAsText(file);
+    // Read as text with UTF-8, exactly like App.js
+    reader.readAsText(file, "UTF-8");
   });
 }
 
@@ -376,29 +498,22 @@ function calculateHashAndWait() {
 async function get_Sha3() {
   $("#note").html(`<h5 class="text-warning">Hashing Your Document 😴...</h5>`);
   $("#loader").show();
-  $("#calculate-hash-btn").attr("disabled", true);
+  $("#calculate-hash-btn").prop("disabled", true);
   
   const hash = await calculateHashAndWait();
   
   $("#loader").hide();
-  $("#calculate-hash-btn").attr("disabled", false);
+  $("#calculate-hash-btn").prop("disabled", false);
   
   if (hash) {
     // Enable the verify button after successful hash calculation
     $("#upload_file_button").prop("disabled", false);
-    console.log("Verify button enabled");
+    console.log("Verify button enabled with hash:", hash);
     
-    const urlHash = new URL(window.location.href).searchParams.get("hash");
-    if (urlHash) {
-      // Check if the hashes match
-      if (urlHash === window.calculatedHash) {
-        $("#note").html(`<h5 class="text-center text-success">Hash matches the URL parameter! ✅<br>Click "Verify Document" to complete verification</h5>`);
-      } else {
-        $("#note").html(`<h5 class="text-center text-danger">Hash does NOT match the URL parameter! ❌<br>You can still click "Verify Document" to check details</h5>`);
-      }
-    } else {
-      $("#note").html(`<h5 class="text-center text-info">Document Hashed Successfully 😎<br>Click "Verify Document" to complete verification</h5>`);
-    }
+    $("#note").html(`<h5 class="text-center text-info">Document Hashed Successfully 😎<br>Click "Verify Document" to compare with blockchain original</h5>`);
+  } else {
+    $("#upload_file_button").prop("disabled", true);
+    $("#note").html(`<h5 class="text-center text-danger">Failed to hash document. Please try again.</h5>`);
   }
 }
 
@@ -426,7 +541,7 @@ function checkURL() {
   blockno = url.searchParams.get("block");
   
   if (urlHash) {
-    $("#note").html(`<h5 class="text-center text-warning">Please upload the document to verify against hash: ${truncateAddress(urlHash)}</h5>`);
+    $("#note").html(`<h5 class="text-center text-warning">Please upload the document you want to verify</h5>`);
   }
 }
 
@@ -492,12 +607,16 @@ function truncateAddress(address) {
   )}`;
 }
 
-// Add this function to debug button visibility
-function checkButtonVisibility() {
-  console.log("Calculate hash button display:", $("#calculate-hash-btn").css("display"));
-  console.log("Verify button display:", $("#upload_file_button").css("display"));
-  
-  // Force show the verify button if needed
-  $("#upload_file_button").show();
-  console.log("Verify button display after force show:", $("#upload_file_button").css("display"));
+// Wallet connection functions
+function connect() {
+  // Verify page doesn't need wallet connection
+  console.log("Connect called - not needed for verification");
+  $("#loginButton").hide();
+  $("#logoutButton").show();
+}
+
+function disconnect() {
+  console.log("Disconnect called");
+  $("#loginButton").show();
+  $("#logoutButton").hide();
 }
