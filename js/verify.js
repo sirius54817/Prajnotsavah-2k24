@@ -78,7 +78,15 @@ async function verify_Hash() {
       if (urlHash !== docHash) {
         console.warn("Hash mismatch with URL");
         $("#doc-status").html(`<h3 class="text-danger">Document Not Verified ❌</h3>`);
-        $("#file-hash").html(`<span class="text-danger">Hash Mismatch!</span>`);
+        $("#file-hash").html(`
+                <div class="mt-2">
+                    <span class="text-danger fw-bold">Hash Mismatch!</span><br>
+                    <small class="text-muted">Calculated:</small> <span class="text-info">${truncateAddress(docHash)}</span><br>
+                    <small class="text-muted">Expected:</small> <span class="text-warning">${truncateAddress(urlHash)}</span>
+                </div>
+             `);
+        // Explicitly show the results area
+        $(".transaction-status").removeClass("d-none").show();
         print_info(null, false);
         return;
       }
