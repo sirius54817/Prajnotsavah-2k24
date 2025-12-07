@@ -1,402 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team - amadeusX</title>
-    <link rel="stylesheet" href="./css/loader.css" />
+    <title>Team | amadeusX</title>
     <link href="./css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/main.css" />
-    <link href="./css/aos.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
-    <style>
-        /* Include your existing sidebar and nav styles */
-
-        .team-section {
-            padding: 80px 0;
-        }
-
-        .team-card {
-            background: rgba(37, 32, 36, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            margin-bottom: 30px;
-        }
-
-        .team-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .profile-img-wrapper {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            overflow: hidden;
-            border: 3px solid var(--main-color);
-        }
-
-        .profile-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .team-name {
-            color: #fff;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .reg-number {
-            color: #818181;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        .linkedin-btn {
-            background: linear-gradient(45deg, #0077B5, #00A0DC);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .linkedin-btn:hover {
-            transform: scale(1.05);
-            color: white;
-            box-shadow: 0 5px 15px rgba(0, 119, 181, 0.4);
-        }
-
-        .video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .video-background video {
-            min-width: 100%;
-            min-height: 100%;
-            object-fit: cover;
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Sidebar styles */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 10001;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-
-        .sidebar a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidebar .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-            text-decoration: none;
-            color: #818181;
-            padding: 8px;
-            line-height: 1;
-        }
-
-        .sidebar a.active {
-            color: #f1f1f1;
-            background: rgba(255, 23, 68, 0.2);
-        }
-
-        .sidebar a:hover:not(.active) {
-            color: #f1f1f1;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .openbtn {
-            font-size: 20px;
-            cursor: pointer;
-            background-color: rgba(17, 17, 17, 0.8);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-            width: 45px;
-        }
-
-        .openbtn:hover {
-            background-color: #444;
-        }
-
-        .top-nav-wrapper {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(17, 17, 17, 0.3);
-            backdrop-filter: blur(8px);
-            padding: 10px 20px;
-            border-radius: 12px;
-        }
-
-        .auth-buttons {
-            margin-left: auto;
-            display: flex;
-            gap: 15px;
-            z-index: 999;
-        }
-
-        .btn-connect, .btn-disconnect {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-        }
-
-        .btn-connect {
-            background: linear-gradient(45deg, var(--main-color), #ff4d5a);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3);
-        }
-
-        .btn-disconnect {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            border: 1px solid rgba(220, 53, 69, 0.2);
-        }
-
-        .brand-text {
-            font-size: 24px;
-            color: var(--main-color);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 15px;
-        }
-
-        @media (max-width: 768px) {
-            .auth-buttons button span {
-                display: none;
-            }
-            .auth-buttons button {
-                padding: 8px 12px;
-            }
-            .auth-buttons button i {
-                margin: 0;
-                font-size: 16px;
-            }
-        }
-
-        /* Add to your existing styles */
-        .left-section {
-            display: flex;
-            align-items: center;
-        }
-
-        #main {
-            transition: margin-left .5s;
-            padding: 16px;
-            margin-top: 80px; /* Important for spacing below fixed nav */
-        }
-    </style>
+    <link href="./css/aos.min.css" rel="stylesheet" />
+    <link href="./css/loader.css" rel="stylesheet" />
+    <link href="./css/main.css" rel="stylesheet" />
+    <link rel="icon" href="./assets/images/icon.png" />
 </head>
-<body>
-    <!-- Video Background -->
-    <div class="video-background">
-        <video autoplay muted loop id="myVideo">
-            <source src="./files/earth.mp4" type="video/mp4">
-        </video>
-        <div class="video-overlay"></div>
-    </div>
 
-    <!-- Add after video background -->
-    <div class="top-nav-wrapper">
-        <div class="left-section">
-            <button class="openbtn" onclick="openNav()">☰</button>
-            <div class="brand-text">
-                <i class="fa-solid fa-dragon home_text"></i>
-                <span class="home_text">amadeus</span>X
+<body>
+    <!-- Background -->
+    <div class="overlay-bg"></div>
+    <video autoplay muted loop class="video-bg">
+        <source src="./files/earth.mp4" type="video/mp4">
+    </video>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-glass">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <i class="fa-solid fa-dragon text-gradient display-6"></i>
+                <span class="fw-bold fs-4">amadeus<span class="text-gradient">X</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+                    <li class="nav-item"><a class="nav-link" href="verify.html">Verify</a></li>
+                    <li class="nav-item"><a class="nav-link" href="delete.html">Delete</a></li>
+                    <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="about.html">Team</a></li>
+                </ul>
             </div>
         </div>
-        <div class="auth-buttons">
-            <button id="loginButton" onclick="connect()" class="btn btn-connect">
-                <i class="fas fa-wallet me-2"></i>
-                <span>Connect Wallet</span>
-            </button>
-            <button id="logoutButton" onclick="disconnect()" class="btn btn-disconnect d-none">
-                <i class="fas fa-sign-out-alt me-2"></i>
-                <span>Disconnect</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Navigation and Sidebar (same as other pages) -->
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <div class="sidebar-brand p-3 pl-8">
-            <i class="fa-solid fa-dragon home_text"></i>
-            <span class="home_text">amadeus</span>X
-        </div>
-        <a href="index.html">
-            <i class="fas fa-home me-2"></i>Home
-        </a>
-        <a href="upload.html">
-            <i class="fas fa-upload me-2"></i>Upload
-        </a>
-        <a href="verify.html">
-            <i class="fas fa-check-circle me-2"></i>Verify
-        </a>
-        <a href="delete.html">
-            <i class="fas fa-trash me-2"></i>Delete
-        </a>
-        <a href="admin.html">
-            <i class="fas fa-user-shield me-2"></i>Admin
-        </a>
-        <a href="about.html" class="active">
-            <i class="fas fa-users me-2"></i>Team
-        </a>
-    </div>
+    </nav>
 
     <!-- Main Content -->
-    <div id="main">
-        <div class="container team-section">
-            <div class="row">
+    <section class="min-vh-100 d-flex align-items-center py-5">
+        <div class="container pt-5">
+            <div class="row mb-5 justify-content-center text-center" data-aos="fade-down">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold text-white mb-3">Our <span class="text-gradient">Team</span></h1>
+                    <p class="lead text-muted">The minds behind amadeusX</p>
+                </div>
+            </div>
+
+            <div class="row g-4 justify-content-center">
                 <!-- Team Member 1 -->
                 <div class="col-md-6 col-lg-3" data-aos="fade-up">
-                    <div class="team-card">
-                        <div class="profile-img-wrapper">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=hiteshkumar&gender=male" alt="Hitesh K" class="profile-img">
+                    <div class="glass-panel p-4 text-center h-100 feature-card">
+                        <div class="mb-4 position-relative d-inline-block">
+                            <div class="rounded-circle overflow-hidden p-1 border border-2 border-info"
+                                style="width: 120px; height: 120px; margin: 0 auto;">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=hiteshkumar&gender=male"
+                                    alt="Hitesh K" class="w-100 h-100 object-fit-cover">
+                            </div>
                         </div>
-                        <h3 class="team-name">Hitesh K</h3>
-                        <p class="reg-number">99220040586</p>
-                        <a href="https://linkedin.com/in/kvhkc" target="_blank" class="linkedin-btn">
-                            <i class="fab fa-linkedin"></i>
-                            Connect
+                        <h4 class="text-white mb-1">Hitesh K</h4>
+                        <p class="text-gradient small mb-3">99220040586</p>
+                        <a href="https://linkedin.com/in/kvhkc" target="_blank"
+                            class="btn btn-outline-light btn-sm rounded-pill px-4">
+                            <i class="fab fa-linkedin me-2"></i>Connect
                         </a>
                     </div>
                 </div>
 
                 <!-- Team Member 2 -->
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="team-card">
-                        <div class="profile-img-wrapper">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=krishnasairammalapaka&gender=male" alt="Krishna M" class="profile-img">
+                    <div class="glass-panel p-4 text-center h-100 feature-card">
+                        <div class="mb-4 position-relative d-inline-block">
+                            <div class="rounded-circle overflow-hidden p-1 border border-2 border-info"
+                                style="width: 120px; height: 120px; margin: 0 auto;">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=krishnasairammalapaka&gender=male"
+                                    alt="Krishna M" class="w-100 h-100 object-fit-cover">
+                            </div>
                         </div>
-                        <h3 class="team-name">Krishna M</h3>
-                        <p class="reg-number">99220040588</p>
-                        <a href="https://linkedin.com/in/krishnasairammalapaka" target="_blank" class="linkedin-btn">
-                            <i class="fab fa-linkedin"></i>
-                            Connect
+                        <h4 class="text-white mb-1">Krishna M</h4>
+                        <p class="text-gradient small mb-3">99220040588</p>
+                        <a href="https://linkedin.com/in/krishnasairammalapaka" target="_blank"
+                            class="btn btn-outline-light btn-sm rounded-pill px-4">
+                            <i class="fab fa-linkedin me-2"></i>Connect
                         </a>
                     </div>
                 </div>
 
                 <!-- Team Member 3 -->
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-                    <div class="team-card">
-                        <div class="profile-img-wrapper">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=somanadh&gender=male" alt="Somanadh J" class="profile-img">
+                    <div class="glass-panel p-4 text-center h-100 feature-card">
+                        <div class="mb-4 position-relative d-inline-block">
+                            <div class="rounded-circle overflow-hidden p-1 border border-2 border-info"
+                                style="width: 120px; height: 120px; margin: 0 auto;">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=somanadh&gender=male"
+                                    alt="Somanadh J" class="w-100 h-100 object-fit-cover">
+                            </div>
                         </div>
-                        <h3 class="team-name">Somanadh J</h3>
-                        <p class="reg-number">99220041606</p>
-                        <a href="https://linkedin.com/in/somanadhjonnalagadda" target="_blank" class="linkedin-btn">
-                            <i class="fab fa-linkedin"></i>
-                            Connect
+                        <h4 class="text-white mb-1">Somanadh J</h4>
+                        <p class="text-gradient small mb-3">99220041606</p>
+                        <a href="https://linkedin.com/in/somanadhjonnalagadda" target="_blank"
+                            class="btn btn-outline-light btn-sm rounded-pill px-4">
+                            <i class="fab fa-linkedin me-2"></i>Connect
                         </a>
                     </div>
                 </div>
 
                 <!-- Team Member 4 -->
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                    <div class="team-card">
-                        <div class="profile-img-wrapper">
-                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=nagasainuthalapati&gender=male" alt="Nagasai N" class="profile-img">
+                    <div class="glass-panel p-4 text-center h-100 feature-card">
+                        <div class="mb-4 position-relative d-inline-block">
+                            <div class="rounded-circle overflow-hidden p-1 border border-2 border-info"
+                                style="width: 120px; height: 120px; margin: 0 auto;">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=nagasainuthalapati&gender=male"
+                                    alt="Nagasai N" class="w-100 h-100 object-fit-cover">
+                            </div>
                         </div>
-                        <h3 class="team-name">Nagasai N</h3>
-                        <p class="reg-number">99220041611</p>
-                        <a href="https://linkedin.com/in/nagasainuthalapati" target="_blank" class="linkedin-btn">
-                            <i class="fab fa-linkedin"></i>
-                            Connect
+                        <h4 class="text-white mb-1">Nagasai N</h4>
+                        <p class="text-gradient small mb-3">99220041611</p>
+                        <a href="https://linkedin.com/in/nagasainuthalapati" target="_blank"
+                            class="btn btn-outline-light btn-sm rounded-pill px-4">
+                            <i class="fab fa-linkedin me-2"></i>Connect
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Scripts -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-5">
+                    <div class="footer-brand">
+                        <i class="fa-solid fa-dragon text-gradient"></i>
+                        <span>amadeus<span class="text-gradient">X</span></span>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col-6 footer-links">
+                            <h4>Services</h4>
+                            <ul>
+                                <li><a href="#">Web3</a></li>
+                                <li><a href="#">Dapps</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6 footer-links">
+                            <h4>About</h4>
+                            <ul>
+                                <li><a href="about.html">Team</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-5 pt-4 text-center text-muted">
+                <p>&copy; 2024 amadeusX</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/aos.js"></script>
     <script>
-        AOS.init({
-            duration: 800,
-            once: true
-        });
-    </script>
-    <script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "250px";
-        document.getElementById("main").style.marginLeft = "250px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
-    }
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', function(event) {
-        const sidebar = document.getElementById('mySidebar');
-        const openbtn = document.querySelector('.openbtn');
-        
-        if (!sidebar.contains(event.target) && !openbtn.contains(event.target) && sidebar.style.width === "250px") {
-            closeNav();
-        }
-    });
+        AOS.init();
     </script>
 </body>
-</html> 
+
+</html>

@@ -1,317 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/loader.css">
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link href="./css/aos.min.css" rel="stylesheet" />
-    <script src="node_modules\web3\dist\web3.min.js"></script>
-    <script src="js/App.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <link rel="stylesheet" href="css/main.css" />
-    <link rel="icon" href="./assets/images/icon.png" />
-    <title>Delete Document</title>
-    <style>
-      /* Add sidebar styles */
-      .sidebar {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        left: 0;
-        background-color: rgba(17, 17, 17, 0.95);
-        overflow-x: hidden;
-        transition: all 0.3s ease-in-out;
-        padding-top: 60px;
-        backdrop-filter: blur(10px);
-      }
 
-      .sidebar a {
-        padding: 12px 15px 12px 32px;
-        text-decoration: none;
-        font-size: 18px;
-        color: #818181;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s ease;
-      }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delete Document | amadeusX</title>
 
-      .sidebar .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-        text-decoration: none;
-        color: #818181;
-      }
+  <!-- CSS -->
+  <link href="./css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+  <link href="./css/aos.min.css" rel="stylesheet" />
+  <link href="./css/loader.css" rel="stylesheet" />
+  <link href="./css/main.css" rel="stylesheet" />
+  <link rel="icon" href="./assets/images/icon.png" />
 
-      .sidebar a.active {
-        color: #fff;
-        background: rgba(255, 23, 68, 0.2);
-        border-left: 4px solid var(--main-color);
-      }
+  <!-- Scripts -->
+  <script src="node_modules/web3/dist/web3.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/App.js"></script>
+</head>
 
-      .sidebar a:hover:not(.active) {
-        color: #f1f1f1;
-        background: rgba(255, 255, 255, 0.1);
-      }
+<body>
+  <!-- Background -->
+  <div class="overlay-bg"></div>
+  <video autoplay muted loop class="video-bg">
+    <source src="./files/earth.mp4" type="video/mp4">
+  </video>
 
-      .openbtn {
-        font-size: 20px;
-        cursor: pointer;
-        background-color: rgba(17, 17, 17, 0.8);
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        backdrop-filter: blur(8px);
-        transition: all 0.3s ease;
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .openbtn:hover {
-        background-color: rgba(68, 68, 68, 0.8);
-      }
-
-      .sidebar-brand {
-        padding: 20px 15px;
-        color: var(--main-color);
-        font-size: 24px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .top-nav-wrapper {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 25px;
-      }
-
-      .brand-text {
-        font-size: 24px;
-        color: var(--main-color);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        margin-left: 15px;
-        white-space: nowrap;
-      }
-
-      .auth-buttons {
-        margin-left: auto;
-        display: flex;
-        gap: 10px;
-      }
-
-      #main {
-        transition: margin-left .5s;
-        padding-top: 80px;
-      }
-
-      @media (max-width: 768px) {
-        .brand-text span {
-          display: none;
-        }
-        .auth-buttons button span {
-          display: none;
-        }
-        .auth-buttons button {
-          padding: 8px 12px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="loader-wraper">
-      <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-    </div>
-    <!-- Replace navbar with new top nav and sidebar -->
-    <div class="top-nav-wrapper">
-      <button class="openbtn" onclick="openNav()">☰</button>
-      <div class="brand-text">
-        <i class="fa-solid fa-dragon home_text"></i>
-        <span class="home_text">amadeus</span>X
-      </div>
-      <div class="auth-buttons">
-        <button id="loginButton" onclick="connect()" class="btn main-button">
-          <i class="fas fa-wallet me-2"></i>Login
-        </button>
-        <button id="logoutButton" onclick="disconnect()" class="btn main-button">
-          <i class="fas fa-sign-out-alt me-2"></i>Logout
-        </button>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-glass">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <i class="fa-solid fa-dragon text-gradient display-6"></i>
+        <span class="fw-bold fs-4">amadeus<span class="text-gradient">X</span></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-3 align-items-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="upload.html">Upload</a></li>
+          <li class="nav-item"><a class="nav-link" href="verify.html">Verify</a></li>
+          <li class="nav-item"><a class="nav-link active" href="delete.html">Delete</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">Team</a></li>
+          <li class="nav-item ms-lg-2 d-flex gap-2">
+            <button id="loginButton" onclick="connect()" class="btn btn-premium btn-sm">
+              <i class="fas fa-wallet me-2"></i>Login
+            </button>
+            <button id="logoutButton" onclick="disconnect()" class="btn btn-outline-light btn-sm rounded-pill px-3"
+              style="display: none;">
+              <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
+  </nav>
 
-    <div id="mySidebar" class="sidebar">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-      <div class="brand-text sidebar-brand">
-        <i class="fa-solid fa-dragon"></i>
-        <span>amadeus</span>X
+  <!-- Main Content -->
+  <section class="min-vh-100 py-5 mt-5">
+    <div class="container pt-4">
+
+      <!-- Alert -->
+      <div class="alert alert-danger d-none mt-2" role="alert">
+        Please download MetaMask at <a target="_blank" href="https://metamask.io/download" class="alert-link">Metamask
+          Site</a>
       </div>
-      <a href="index.html">
-        <i class="fas fa-home me-2"></i>Home
-      </a>
-      <a href="upload.html">
-        <i class="fas fa-upload me-2"></i>Upload
-      </a>
-      <a href="verify.html">
-        <i class="fas fa-check-circle me-2"></i>Verify
-      </a>
-      <a href="delete.html" class="active">
-        <i class="fas fa-trash me-2"></i>Delete
-      </a>
-      <a href="admin.html">
-        <i class="fas fa-user-shield me-2"></i>Admin
-      </a>
-      <a href="about.html">
-        <i class="fas fa-users me-2"></i>Team
-      </a>
-    </div>
 
-    <!-- Add main wrapper -->
-    <div id="main">
-      <!--=====================Upload Document===========================-->
-
-      <div class="container">
-        <video autoplay muted loop id="myVideo1">
-          <source src="./files/4kbg.mp4" type="video/mp4" />
-        </video>
-        <div class="alert alert-danger d-none mt-2">
-          Please download MetaMask at <a target="_blank" href="https://metamask.io/download">Metamask Site</a>
-         </div>
-        <div class="row content m-1"> 
-          <div data-aos="fade-down" class="box wallet-status col-lg-12 d-flex flex-column my-2">
-            <i class="fa-brands fa-connectdevelop icon" aria-hidden="true"></i>
-            <span id="Exporter-info" class="p-1 mb-2"><span class="text-warning"></span></span>
-            <span id="network" class="p-1"><span class="text-warning"></span></span>
-           <span id="userAddress" class="p-1"><span class="text-warning"></span></span>
-           <span id="userBalance" class="p-1"> <span class="text-warning"></span></span>
-           
-         
-          </div>
-        
-          <div data-aos="zoom-in" class="col-lg-6 py-3 data-upload my-3 mx-md-2">
-            <input onchange="get_Sha3()"  id="doc-file" type="file"/>
-            
-            <span id="note" class="text-danger"
-              ></span
-            >
-            <img id="loader" class="d-none" src="files/loader.svg" alt="loader">
-            <input
-            onclick="deleteHash()"
-              class="btn  upload-button main-button"
-              type="submit"
-              value="Delete document"
-              id="upload_file_button"
-            />
-          </div>
-          
- 
-        
+      <!-- Loader -->
+      <div class="loader-wraper">
+        <div class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
       </div>
-   
-    <!--=====================Footer===========================-->
-    <div class="footer-dark">
-      <footer>
-        <div class="container">
+
+      <!-- Dashboard Stats -->
+      <div class="row g-4 mb-5" data-aos="fade-down">
+        <div class="col-lg-12">
+          <div class="glass-panel p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="feature-icon-wrapper mb-0" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                <i class="fa-solid fa-trash-can"></i>
+              </div>
+              <div>
+                <h5 class="mb-0">Delete Document</h5>
+                <small class="text-muted" id="Exporter-info">Not Connected</small>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap gap-3 text-sm">
+              <span class="badge bg-dark border border-secondary p-2" id="userAddress">Address: <span
+                  class="text-warning">...</span></span>
+              <span class="badge bg-dark border border-secondary p-2" id="network">Network: <span
+                  class="text-warning">...</span></span>
+              <span class="badge bg-dark border border-secondary p-2" id="userBalance">Balance: <span
+                  class="text-warning">...</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-8" data-aos="zoom-in">
+          <div class="glass-panel p-5 text-center">
+            <h3 class="mb-4">Select Document to Delete</h3>
+            <div class="upload-area p-5 border border-2 border-dashed rounded-3 mb-4"
+              style="border-color: rgba(220, 53, 69, 0.3) !important;">
+              <i class="fas fa-file-excel display-4 text-danger mb-3"></i>
+              <div class="mb-3">
+                <label for="doc-file" class="form-label text-muted d-block">Select document to check & delete</label>
+                <input class="form-control bg-dark text-light border-secondary w-75 mx-auto" type="file" id="doc-file"
+                  onchange="get_Sha3()">
+              </div>
+              <span id="note" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center gap-3">
+              <img id="loader" class="d-none" src="files/loader.svg" alt="loader" width="40">
+              <input onclick="deleteHash()" class="btn btn-danger px-5" type="submit" value="Delete Document"
+                id="upload_file_button">
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-5">
+          <div class="footer-brand">
+            <i class="fa-solid fa-dragon text-gradient"></i>
+            <span>amadeus<span class="text-gradient">X</span></span>
+          </div>
+        </div>
+        <div class="col-lg-7">
           <div class="row">
-            <div class="col-sm-6 col-md-3 item">
-              <p >Services</p>
-              <ul  data-aos="zoom-in">
+            <div class="col-6 footer-links">
+              <h4>Services</h4>
+              <ul>
                 <li><a href="#">Web3</a></li>
                 <li><a href="#">Dapps</a></li>
-                <li><a href="#">NFTs</a></li>
               </ul>
             </div>
-            <div class="col-sm-6 col-md-3 item">
-              <p >About us</p>
-              <ul  data-aos="zoom-in">
-                <li><a href="#">Company</a></li>
-                <li><a href="#">Team</a></li>
+            <div class="col-6 footer-links">
+              <h4>About</h4>
+              <ul>
+                <li><a href="about.html">Team</a></li>
               </ul>
-            </div>
-            <div class="col-md-6 item text">
-              <p  > 
-                 <i class="fa-solid fa-dragon"></i>
-                falkonX</p>
-              <!-- <a href="https://www.flaticon.com/free-icons/blockchain" title="blockchain icons">Blockchain icons created by photo3idea_studio - Flaticon</a> -->
-              <p  data-aos="zoom-in">
-                This website is useful to secure your certificates using blockchain technology.
-              </p>
-            </div>
-            <div  data-aos="zoom-in" class="col item social">
-              <a href="https://www.linkedin.com/in/mohamed-waseem-%E2%80%8E-a52727228"><i class="fa-brands fa-linkedin"></i></a>
-              <a href="https://instagram.com/waseem_0605?igshid=YmMyMTA2M2Y="><i class="fa-brands fa-instagram"></i></a>
-              <a href="https://github.com/waseem0605"><i class="fa-brands fa-github"></i></a>
-              <a href="https://wa.me/+919150830490"><i class="fa-brands fa-whatsapp"></i></a>
-              <a href="https://t.me/+919150830490"><i class="fa-brands fa-telegram"></i></a>
             </div>
           </div>
-          <p class="copyright">falkonX ©2023</p>
         </div>
-  
-      </footer>
+      </div>
+      <div class="border-top border-secondary mt-5 pt-4 text-center text-muted">
+        <p>&copy; 2024 amadeusX</p>
+      </div>
     </div>
-    <div >
-      <i onclick="topFunction()" id="scroll-btn" class="fa-solid fa-angle-up"></i>
-    </div>
-    <div><a href="mailto:adm.falkonx@gmail.com?subject=From falkonX Site"> 
-      <i class="mail-us fa-solid fa-headset"></i>
-    </a>
-    <script src="./js/aos.js"></script>
-    <script src="./js/script.js"></script>
-    <script
-    src="https://code.jquery.com/jquery-3.6.0.js"
-    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "250px";
-        document.getElementById("main").style.marginLeft = "250px";
-    }
+  </footer>
 
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
-    }
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/aos.js"></script>
+  <script>
+    AOS.init();
+    $(".loader-wraper").fadeOut("slow");
+  </script>
+</body>
 
-    document.addEventListener('click', function(event) {
-        const sidebar = document.getElementById('mySidebar');
-        const openbtn = document.querySelector('.openbtn');
-        const sidebarWidth = window.getComputedStyle(sidebar).width;
-        
-        if (!sidebar.contains(event.target) && 
-            !openbtn.contains(event.target) && 
-            sidebarWidth !== "0px") {
-          closeNav();
-        }
-    });
-    </script>
-  </body>
 </html>

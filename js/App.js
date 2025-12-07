@@ -1,219 +1,4 @@
-window.CONTRACT = {
-  address: "0x2DbbfA9340BD61C59E4A6aFAC07942755054A64b",
-  network: "https://ethereum-sepolia-rpc.publicnode.com",
-  explore: "https://sepolia.etherscan.io/",
-  abi:[
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "_exporter",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "_ipfsHash",
-          "type": "string"
-        }
-      ],
-      "name": "addHash",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_add",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_info",
-          "type": "string"
-        }
-      ],
-      "name": "add_Exporter",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "hash",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "string",
-          "name": "_ipfs",
-          "type": "string"
-        }
-      ],
-      "name": "addDocHash",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_add",
-          "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_newInfo",
-          "type": "string"
-        }
-      ],
-      "name": "alter_Exporter",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "changeOwner",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_add",
-          "type": "address"
-        }
-      ],
-      "name": "delete_Exporter",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_hash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "deleteHash",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "inputs": [],
-      "name": "count_Exporters",
-      "outputs": [
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "count_hashes",
-      "outputs": [
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "_hash",
-          "type": "bytes32"
-        }
-      ],
-      "name": "findDocHash",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_add",
-          "type": "address"
-        }
-      ],
-      "name": "getExporterInfo",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    }
-  ]
-};
+// window.CONTRACT is now loaded from js/config.js
 
 let blockNumber = "";
 
@@ -235,7 +20,7 @@ async function connect() {
       console.log(selectedAccount);
       window.localStorage.setItem("userAddress", window.userAddress);
       window.location.reload();
-    } catch (error) {}
+    } catch (error) { }
   } else {
     $("#upload_file_button").attr("disabled", true);
     $("#doc-file").attr("disabled", true);
@@ -244,7 +29,7 @@ async function connect() {
   }
 }
 
-window.onload = async () => {
+window.addEventListener('load', async () => {
   $("#loader").hide();
 
   $("#loginButton").hide();
@@ -252,7 +37,13 @@ window.onload = async () => {
   $(".loader-wraper").fadeOut("slow");
   hide_txInfo();
   $("#upload_file_button").attr("disabled", true);
-
+  // Check for network mismatch immediately on load
+  if (window.ethereum) {
+    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+    if (parseInt(chainId, 16) !== window.CONTRACT.chainId) {
+      await switchNetwork();
+    }
+  }
   window.userAddress = window.localStorage.getItem("userAddress");
 
   if (window.ethereum) {
@@ -261,18 +52,17 @@ window.onload = async () => {
       window.CONTRACT.abi,
       window.CONTRACT.address
     );
-    if (window.userAddress.length > 10) {
+    if (window.userAddress && window.userAddress !== "null" && window.userAddress.length > 10) {
       // let isLocked =await window.ethereum._metamask.isUnlocked();
       //  if(!isLocked) disconnect();
       $("#logoutButton").show();
       $("#loginButton").hide();
       $("#userAddress")
         .html(`<i class="fa-solid fa-address-card mx-2 text-primary"></i>${truncateAddress(
-        window.userAddress
-      )}
-       <a class="text-info" href="${window.CONTRACT.explore}/address/${
-        window.userAddress
-      }" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-square-arrow-up-right text-warning"></i></a>  
+          window.userAddress
+        )}
+       <a class="text-info" href="${window.CONTRACT.explore}/address/${window.userAddress
+          }" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-square-arrow-up-right text-warning"></i></a>  
        </a>`);
 
       if (window.location.pathname == "/admin.html") await getCounters();
@@ -311,12 +101,12 @@ window.onload = async () => {
   // Add this line to check exporter status on page load
   const status = await checkExporterStatus();
   console.log("Authorization status:", status);
-  
+
   if (status && !status.isExporter && !status.isOwner) {
     $("#note").html(`<h5 class="text-danger">Your wallet (${truncateAddress(status.address)}) is not authorized as an exporter</h5>`);
     $("#upload_file_button").attr("disabled", true);
   }
-};
+});
 
 function hide_txInfo() {
   $(".transaction-status").addClass("d-none");
@@ -330,8 +120,8 @@ async function get_ethBalance() {
     if (err === null) {
       $("#userBalance").html(
         "<i class='fa-brands fa-gg-circle mx-2 text-danger'></i>" +
-          web3.utils.fromWei(balance).substr(0, 6) +
-          ""
+        web3.utils.fromWei(balance).substr(0, 6) +
+        ""
       );
     } else $("#userBalance").html("n/a");
   });
@@ -346,9 +136,9 @@ if (window.ethereum) {
 function printUploadInfo(result) {
   $("#transaction-hash").html(
     `<a target="_blank" title="View Transaction at Polygon Scan" href="${window.CONTRACT.explore}/tx/` +
-      result.transactionHash +
-      '"+><i class="fa fa-check-circle font-size-2 mx-1 text-white mx-1"></i></a>' +
-      truncateAddress(result.transactionHash)
+    result.transactionHash +
+    '"+><i class="fa fa-check-circle font-size-2 mx-1 text-white mx-1"></i></a>' +
+    truncateAddress(result.transactionHash)
   );
   $("#file-hash").html(
     `<i class="fa-solid fa-hashtag mx-1"></i> ${truncateAddress(
@@ -389,52 +179,58 @@ function printUploadInfo(result) {
 }
 
 async function sendHash(fileHash, ipfsCid) {
-    try {
-        // First check if user is authorized
-        const status = await checkExporterStatus();
-        if (!status.isExporter && !status.isOwner) {
-            throw new Error("Your wallet is not authorized as an exporter");
-        }
-        
-        $("#loader").removeClass("d-none");
-        $("#upload_file_button").slideUp();
-        $("#note").html(`<h5 class="text-info">Please confirm the transaction 🙂</h5>`);
-        
-        // Log the parameters being sent to the contract
-        console.log("Sending hash to contract:", {
-            contractAddress: window.CONTRACT.address,
-            fileHash: window.hashedfile,
-            ipfsCid: ipfsCid,
-            fromAddress: window.userAddress
-        });
-        
-        const result = await window.contract.methods
-            .addDocHash(window.hashedfile, ipfsCid)
-            .send({ from: window.userAddress })
-            .on("transactionHash", function (hash) {
-                console.log("Transaction hash:", hash);
-                $("#note").html(`<h5 class="text-info p-1 text-center">Please wait for transaction to be mined 😴</h5>`);
-            })
-            .on("receipt", function (receipt) {
-                console.log("Transaction receipt:", receipt);
-                printUploadInfo(receipt);
-                generateQRCode();
-            })
-            .on("error", function(error) {
-                console.error("Transaction error:", error);
-                $("#note").html(`<h5 class="text-danger">Transaction error: ${error.message}</h5>`);
-                $("#loader").addClass("d-none");
-                $("#upload_file_button").slideDown();
-            });
-            
-        return result;
-    } catch (error) {
-        console.error('Error in sendHash:', error);
-        $("#note").html(`<h5 class="text-danger">Transaction failed: ${error.message}</h5>`);
+  try {
+    // First check if user is authorized
+    const status = await checkExporterStatus();
+
+    // The contract modifier canAddHash REQURIES the caller to be in the Exporters mapping.
+    // Being 'owner' is not enough; the owner must explicitly add themselves as an exporter.
+    if (!status.isExporter) {
+      if (status.isOwner) {
+        throw new Error("Owner must add themselves as an Exporter first (Go to Admin -> Add Exporter)");
+      }
+      throw new Error("Your wallet is not authorized as an exporter");
+    }
+
+    $("#loader").removeClass("d-none");
+    $("#upload_file_button").slideUp();
+    $("#note").html(`<h5 class="text-info">Please confirm the transaction 🙂</h5>`);
+
+    // Log the parameters being sent to the contract
+    console.log("Sending hash to contract:", {
+      contractAddress: window.CONTRACT.address,
+      fileHash: window.hashedfile,
+      ipfsCid: ipfsCid,
+      fromAddress: window.userAddress
+    });
+
+    const result = await window.contract.methods
+      .addDocHash(window.hashedfile, ipfsCid)
+      .send({ from: window.userAddress })
+      .on("transactionHash", function (hash) {
+        console.log("Transaction hash:", hash);
+        $("#note").html(`<h5 class="text-info p-1 text-center">Please wait for transaction to be mined 😴</h5>`);
+      })
+      .on("receipt", function (receipt) {
+        console.log("Transaction receipt:", receipt);
+        printUploadInfo(receipt);
+        generateQRCode();
+      })
+      .on("error", function (error) {
+        console.error("Transaction error:", error);
+        $("#note").html(`<h5 class="text-danger">Transaction error: ${error.message}</h5>`);
         $("#loader").addClass("d-none");
         $("#upload_file_button").slideDown();
-        throw error;
-    }
+      });
+
+    return result;
+  } catch (error) {
+    console.error('Error in sendHash:', error);
+    $("#note").html(`<h5 class="text-danger">Transaction failed: ${error.message}</h5>`);
+    $("#loader").addClass("d-none");
+    $("#upload_file_button").slideDown();
+    throw error;
+  }
 }
 
 async function deleteHash() {
@@ -444,7 +240,7 @@ async function deleteHash() {
     `<h5 class="text-info">Please confirm the transaction 🙂</h5>`
   );
   $("#upload_file_button").attr("disabled", true);
-  get_ChainID();
+  await get_ChainID();
 
   if (window.hashedfile) {
     await window.contract.methods
@@ -497,11 +293,19 @@ function getTime() {
 }
 
 async function get_ChainID() {
-  let a = await web3.eth.getChainId();
-  console.log(a);
-  switch (a) {
+  // Return early if no ethereum object
+  if (!window.ethereum) return;
+
+  let chainId = await window.ethereum.request({ method: 'eth_chainId' });
+  let decimalChainId = parseInt(chainId, 16);
+  console.log("Current Chain ID:", decimalChainId);
+
+  switch (decimalChainId) {
     case 1:
       window.chainID = "Ethereum Main Network (Mainnet)";
+      break;
+    case 11155111:
+      window.chainID = "Sepolia Test Network";
       break;
     case 80001:
       window.chainID = "Polygon Test Network";
@@ -509,27 +313,42 @@ async function get_ChainID() {
     case 137:
       window.chainID = "Polygon Mainnet";
       break;
-    case 3:
-      window.chainID = "Ropsten Test Network";
-      break;
-    case 4:
-      window.chainID = "Rinkeby Test Network";
-      break;
-    case 5:
-      window.chainID = "Goerli Test Network";
-      break;
-    case 42:
-      window.chainID = "Kovan Test Network";
+    case 1337:
+      window.chainID = "Localhost 8545";
       break;
     default:
-      window.chainID = "Uknnown ChainID";
+      window.chainID = "Unknown ChainID (" + decimalChainId + ")";
       break;
   }
+
   let network = document.getElementById("network");
   if (network) {
     document.getElementById(
       "network"
     ).innerHTML = `<i class="text-info fa-solid fa-circle-nodes mx-2"></i>${window.chainID}`;
+  }
+
+  // Auto-switch if wrong network
+  if (decimalChainId !== window.CONTRACT.chainId) {
+    console.warn(`Wrong network. Expected ${window.CONTRACT.chainId}, got ${decimalChainId}`);
+    // Optional: could trigger switchNetwork() here automatically or show a UI warning
+  }
+}
+
+async function switchNetwork() {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: "0x" + window.CONTRACT.chainId.toString(16) }],
+    });
+    window.location.reload();
+  } catch (error) {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (error.code === 4902) {
+      alert("Please add Sepolia network to MetaMask");
+    } else {
+      console.error("Failed to switch network:", error);
+    }
   }
 }
 
@@ -562,7 +381,7 @@ function get_Sha3() {
   } else {
     window.hashedfile = null;
   }
-  
+
 }
 
 function disconnect() {
@@ -570,7 +389,7 @@ function disconnect() {
   $("#loginButton").show();
   window.userAddress = null;
   $(".wallet-status").addClass("d-none");
-  window.localStorage.setItem("userAddress", null);
+  window.localStorage.removeItem("userAddress");
   $("#upload_file_button").addClass("disabled");
 }
 
@@ -599,7 +418,7 @@ async function addExporter() {
     $("#ExporterBtn").attr("disabled", true);
     $("#delete").attr("disabled", true);
     $("#edit").attr("disabled", true);
-    get_ChainID();
+    await get_ChainID();
 
     try {
       await window.contract.methods
@@ -623,7 +442,7 @@ async function addExporter() {
           );
         })
 
-        .on("confirmation", function (confirmationNr) {})
+        .on("confirmation", function (confirmationNr) { })
         .on("error", function (error) {
           console.log(error.message);
           $("#note").html(
@@ -690,7 +509,7 @@ async function editExporter() {
       `<h5 class="text-info">Please confirm the transaction 😴...</h5>`
     );
     $("#ExporterBtn").attr("disabled", true);
-    get_ChainID();
+    await get_ChainID();
 
     try {
       await window.contract.methods
@@ -712,7 +531,7 @@ async function editExporter() {
           );
         })
 
-        .on("confirmation", function (confirmationNr) {})
+        .on("confirmation", function (confirmationNr) { })
         .on("error", function (error) {
           console.log(error.message);
           $("#note").html(`<h5 class="text-center">${error.message} 👍</h5>`);
@@ -745,7 +564,7 @@ async function deleteExporter() {
       `<h5 class="text-info">Please confirm the transaction 😕...</h5>`
     );
     $("#ExporterBtn").attr("disabled", true);
-    get_ChainID();
+    await get_ChainID();
 
     try {
       await window.contract.methods
@@ -875,21 +694,21 @@ async function checkExporterStatus() {
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
     const userAddress = accounts[0];
     console.log("Current user address:", userAddress);
-    
+
     // Initialize contract with the CORRECT address
     const web3 = new Web3(window.ethereum);
-    const contractAddress = "0x10a5668f4e666aec581673334bfb1945c4b23086"; // Use the address from the error
+    const contractAddress = "0x363B926DFc8c7E0ee7DBd3bf41325B314Ba0Ba81"; // Use the address from the error
     const contract = new web3.eth.Contract(window.CONTRACT.abi, contractAddress);
-    
+
     // Check if user is an exporter
     const exporterInfo = await contract.methods.getExporterInfo(userAddress).call();
     console.log("Exporter info:", exporterInfo);
-    
+
     // Check if user is the owner
     const owner = await contract.methods.owner().call();
     console.log("Contract owner:", owner);
     console.log("Is user the owner:", owner.toLowerCase() === userAddress.toLowerCase());
-    
+
     return {
       address: userAddress,
       isExporter: exporterInfo && exporterInfo.length > 0,
@@ -903,46 +722,46 @@ async function checkExporterStatus() {
 }
 
 async function checkIfHashExists(hash) {
-    try {
-        const result = await window.contract.methods.findDocHash(hash).call();
-        // If blockNumber is not 0, the hash exists
-        return result[0] != 0;
-    } catch (error) {
-        console.error("Error checking hash existence:", error);
-        return false;
-    }
+  try {
+    const result = await window.contract.methods.findDocHash(hash).call();
+    // If blockNumber is not 0, the hash exists
+    return result[0] != 0;
+  } catch (error) {
+    console.error("Error checking hash existence:", error);
+    return false;
+  }
 }
 
 async function uploadToIPFSAndBlockchain() {
-    try {
-        if (!window.hashedfile) {
-            $("#note").html(`<h5 class="text-danger">Please select a file first</h5>`);
-            return;
-        }
-        
-        // Check if hash already exists
-        const hashExists = await checkIfHashExists(window.hashedfile);
-        if (hashExists) {
-            $("#note").html(`<h5 class="text-danger">This document has already been registered</h5>`);
-            return;
-        }
-        
-        // Continue with IPFS upload and blockchain transaction
-        // ... existing code ...
-    } catch (error) {
-        console.error("Upload error:", error);
-        $("#note").html(`<h5 class="text-danger">Upload failed: ${error.message}</h5>`);
+  try {
+    if (!window.hashedfile) {
+      $("#note").html(`<h5 class="text-danger">Please select a file first</h5>`);
+      return;
     }
+
+    // Check if hash already exists
+    const hashExists = await checkIfHashExists(window.hashedfile);
+    if (hashExists) {
+      $("#note").html(`<h5 class="text-danger">This document has already been registered</h5>`);
+      return;
+    }
+
+    // Continue with IPFS upload and blockchain transaction
+    // ... existing code ...
+  } catch (error) {
+    console.error("Upload error:", error);
+    $("#note").html(`<h5 class="text-danger">Upload failed: ${error.message}</h5>`);
+  }
 }
 
 function ensureContractInitialized() {
-    if (!window.contract) {
-        window.web3 = new Web3(window.ethereum);
-        window.contract = new window.web3.eth.Contract(
-            window.CONTRACT.abi,
-            "0x10a5668f4e666aec581673334bfb1945c4b23086" // Use the correct address
-        );
-        console.log("Contract initialized with address:", window.contract._address);
-    }
-    return window.contract;
+  if (!window.contract) {
+    window.web3 = new Web3(window.ethereum);
+    window.contract = new window.web3.eth.Contract(
+      window.CONTRACT.abi,
+      "0x363B926DFc8c7E0ee7DBd3bf41325B314Ba0Ba81" // Use the correct address
+    );
+    console.log("Contract initialized with address:", window.contract._address);
+  }
+  return window.contract;
 }

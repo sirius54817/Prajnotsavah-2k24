@@ -1,388 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <!-- SEO Meta Tags -->
     <meta name="description" content="amadeusX is a leading Document Verification platform designed to bring efficiency and security to your operations through blockchain technology." />
     <meta name="author" content="hiteshK" />
-    <!-- OG Meta Tags to improve the way the post looks when you share the page on Facebook, Twitter, LinkedIn -->
     <meta property="og:site_name" content="amadeusX" />
-    <!-- website name -->
     <meta property="og:site" content="amadeusx.com" />
-    <!-- website link -->
     <meta property="og:title" content="amadeusX - Blockchain Document Verification" />
-    <!-- title shown in the actual shared post -->
-    <meta property="og:description" content="amadeusX is a secure Document Verification platform that leverages blockchain technology to ensure the authenticity and integrity of your documents. Fast, efficient, and reliable." />
-    <!-- description shown in the actual shared post -->
-    <!-- <meta property="og:image" content="" /> -->
-    <!-- image link, make sure it's jpg -->
+    <meta property="og:description" content="amadeusX is a secure Document Verification platform that leverages blockchain technology to ensure the authenticity and integrity of your documents." />
     <meta property="og:url" content="#ABOUT" />
-    <!-- where do you want your post to link to -->
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- to have large image post format in Twitter -->
 
-    <!-- Webpage Title -->
-    <title>amadeusX</title>
-    <link rel="stylesheet" href="./css/loader.css">
+    <title>amadeusX | Secure Document Verification</title>
+    
+    <!-- CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />    <link href="./css/aos.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <link href="./css/aos.min.css" rel="stylesheet" />
     <link href="./css/main.css" rel="stylesheet" />
+    
     <!-- Favicon -->
     <link rel="icon" href="./assets/images/icon.png" />
+</head>
+<body>
+    <!-- Background -->
+    <div class="overlay-bg"></div>
+    <video autoplay muted loop class="video-bg">
+        <source src="./files/earth.mp4" type="video/mp4">
+    </video>
 
-    <!-- Add this CSS in the head section -->
-    <style>
-    .sidebar {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1000;
-        top: 0;
-        left: 0;
-        background-color: #111;
-        overflow-x: hidden;
-        transition: 0.5s;
-        padding-top: 60px;
-    }
-
-    .sidebar a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 18px;
-        color: #818181;
-        display: block;
-        transition: 0.3s;
-    }
-
-    .sidebar a:hover {
-        color: #f1f1f1;
-    }
-
-    .sidebar .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-    }
-
-    .openbtn {
-        font-size: 20px;
-        cursor: pointer;
-        background-color: #111;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 999;
-    }
-
-    .openbtn:hover {
-        background-color: #444;
-    }
-
-    #main {
-        transition: margin-left .5s;
-    }
-
-    @media screen and (max-height: 450px) {
-        .sidebar {padding-top: 15px;}
-        .sidebar a {font-size: 18px;}
-    }
-
-    /* Typography */
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-        background: linear-gradient(45deg, #ffffff, #4a9eff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .hero-subtitle {
-        font-size: 1.5rem;
-        font-weight: 300;
-        line-height: 1.6;
-        margin-bottom: 2rem;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .hero-cta {
-        font-size: 1.1rem;
-        font-weight: 500;
-        padding: 1rem 2rem;
-        border-radius: 30px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-        background: linear-gradient(45deg, #dc3545, #ff4d5a);
-        border: none;
-    }
-
-    .hero-cta:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
-    }
-
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: #ffffff;
-    }
-
-    .feature-card {
-        padding: 2rem;
-        border-radius: 15px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-5px);
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Video background styles */
-    #myVideo {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        min-width: 100%;
-        min-height: 100%;
-        width: auto;
-        height: auto;
-        z-index: -1;
-        object-fit: cover;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            45deg,
-            rgba(0, 0, 0, 0.7),
-            rgba(0, 0, 0, 0.4)
-        );
-        z-index: 0;
-    }
-
-    .typed-text {
-        color: #4a9eff;
-        position: relative;
-        display: inline-block;
-    }
-
-    .typed-cursor {
-        opacity: 1;
-        animation: blink 0.7s infinite;
-        color: #4a9eff;
-    }
-
-    @keyframes blink {
-        0% { opacity: 1; }
-        50% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-    }
-
-    .hero-title .static-text {
-        background: linear-gradient(45deg, #ffffff, #e0e0e0);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .top-nav-wrapper {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 999;
-        display: flex;
-        align-items: center;
-        gap: 25px;
-    }
-
-    .openbtn {
-        font-size: 20px;
-        cursor: pointer;
-        background-color: rgba(17, 17, 17, 0.8);
-        color: white;
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        backdrop-filter: blur(8px);
-        transition: all 0.3s ease;
-        width: 45px;
-    }
-
-    .brand-text {
-        font-size: 24px;
-        color: var(--main-color);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        margin-left: 15px;
-        white-space: nowrap;
-    }
-
-    .brand-text i {
-        font-size: 28px;
-    }
-
-    @media (max-width: 768px) {
-        .brand-text span {
-            display: none;
-        }
-    }
-    </style>
-  </head>
-  <body>
-    <div class="loader-wraper">
-      <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-    </div>
-    <!-- Replace the existing navbar with this -->
-    <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-        <div  class="sidebar-brand p-3 pl-8">
-            <i class="fa-solid fa-dragon home_text"></i>
-            <span  class="home_text">amadeus</span>X
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-glass">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <i class="fa-solid fa-dragon text-gradient display-6"></i>
+                <span class="fw-bold fs-4">amadeus<span class="text-gradient">X</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="upload.html">Upload</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="verify.html">Verify</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="delete.html">Delete</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">Team</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-premium btn-sm" href="verify.html">Get Started</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <a class="active" href="index.html">
-            <i class="fas fa-home me-2"></i>Home
-        </a>
-        <a href="upload.html">
-            <i class="fas fa-upload me-2"></i>Upload
-        </a>
-        <a href="verify.html">
-            <i class="fas fa-check-circle me-2"></i>Verify
-        </a>
-        <a href="delete.html">
-            <i class="fas fa-trash me-2"></i>Delete
-        </a>
-        <a href="admin.html">
-            <i class="fas fa-user-shield me-2"></i>Admin
-        </a>
-        <a href="about.html">
-            <i class="fas fa-users me-2"></i>Team
-        </a>
-    </div>
+    </nav>
 
-    <div class="top-nav-wrapper">
-        <button class="openbtn" onclick="openNav()">☰</button>
-        <div class="brand-text">
-            <i class="fa-solid fa-dragon home_text pl-4"></i>
-            <span class="home_text">amadeus</span>X
-        </div>
-    </div>
-
-    <!-- Add this JavaScript before the closing body tag -->
-    <script>
-    function openNav() {
-        document.getElementById("mySidebar").style.width = "250px";
-        document.getElementById("main").style.marginLeft = "250px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("main").style.marginLeft = "0";
-    }
-
-    // Close sidebar when clicking outside
-    document.addEventListener('click', function(event) {
-        const sidebar = document.getElementById('mySidebar');
-        const openbtn = document.querySelector('.openbtn');
-        if (!sidebar.contains(event.target) && !openbtn.contains(event.target)) {
-            closeNav();
-        }
-    });
-    </script>
-
-    <!-- Add this right after the body tag opens -->
-    <div class="video-background">
-        <video autoplay muted loop id="myVideo">
-            <source src="./files/earth.mp4" type="video/mp4">
-        </video>
-        <div class="video-overlay"></div>
-    </div>
-
-    <!-- Home -->
-    <section class="home min-vh-100 position-relative d-flex align-items-center" id="header">
-        <div class="container position-relative z-index-1" data-aos="fade-up">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-content">
             <div class="row align-items-center">
-                <div class="col-lg-8 col-md-10">
+                <div class="col-lg-8" data-aos="fade-up">
                     <h1 class="hero-title">
-                        <span class="static-text">Build</span> 
-                        <span class="typed-text"></span><br>
-                        <span class="static-text">into your Organization</span>
+                        Build <span class="typed-text"></span><br>
+                        <span class="text-gradient">Into Your Organization</span>
                     </h1>
                     <p class="hero-subtitle">
-                        The amadeusX platform is a leading Document Verification platform.
-                        Designed to bring efficiency and security to your operations.
+                        Experience the future of document verification. Secured by blockchain, powered by amadeusX.
+                        The most reliable way to ensure authenticity in a digital world.
                     </p>
-                    <div class="mt-5">
-                        <a class="btn hero-cta" href="verify.html">
-                            Start Verifying
-                            <i class="fas fa-arrow-right ms-2"></i>
+                    <div class="d-flex gap-3">
+                        <a class="btn btn-premium" href="verify.html">
+                            Start Verifying <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a class="btn btn-outline-light rounded-pill px-4 py-3 fw-bold" href="#features">
+                            Learn More
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- end of home -->
 
-    <!-- Information -->
-    <section class="information py-5">
-        <div class="container">
-            <div class="row text-light g-4">
-                <div class="col-lg-4" data-aos="zoom-in">
-                    <div class="feature-card text-center">
-                        <img src="files/undraw_investment_data_re_sh9x.svg" width="150" class="mb-4">   
-                        <h4 class="mb-3">Less Cost</h4>
-                        <p class="para-light">
-                            With amadeusX uploading any document costs only 
-                            <span class="text-warning">0.5 &dollar; 😮</span>
-                            so you can upload without caring about the Operation cost
+    <!-- Features Section -->
+    <section class="py-5" id="features">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3>Cost Effective</h3>
+                        <p class="text-muted mb-0">
+                            Drastically reduce operational costs. Uploading documents costs only 
+                            <span class="text-white fw-bold">0.5 $</span> per transaction on the network.
                         </p>
                     </div>
                 </div>
-                <div class="col-lg-4" data-aos="zoom-in">
-                    <div class="feature-card text-center">
-                        <img src="files/undraw_time_management_re_tk5w.svg" width="150" class="mb-4">   
-                        <h4 class="mb-3">Fast Process</h4>
-                        <p class="para-light">
-                            Verfying Certificates  takes just <span class="text-warning"> 1 Second 😳 </span>
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Lightning Fast</h3>
+                        <p class="text-muted mb-0">
+                            Experience validaton speeds explicitly designed for enterprise scale. 
+                            Verifying certificates takes just <span class="text-white fw-bold">1 Second</span>.
                         </p>
                     </div>
                 </div>
-                <div class="col-lg-4" data-aos="zoom-in">
-                    <div class="feature-card text-center">
-                        <img src="files/securefiles.svg" width="150" class="mb-4">   
-                        <h4 class="mb-3">Secure</h4>
-                        <p class="para-light">
-                            100% Secure & Transparent operations With Blockchain Technology 🔒
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Unbreakable Security</h3>
+                        <p class="text-muted mb-0">
+                            Leveraging decentralized blockchain technology to ensure 100% data integrity, 
+                            transparency, and immutability.
                         </p>
                     </div>
                 </div>
@@ -390,89 +139,83 @@
         </div>
     </section>
 
-
-<!-- Footer -->
-    <footer class="footer-dark">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6 col-md-3 item">
-            <h3   data-aos="fade-right">Services</h3>
-            <ul  data-aos="zoom-in">
-              <li><a href="#">Web3</a></li>
-              <li><a href="#">Dapps</a></li>
-              <li><a href="#">NFTs</a></li>
-            </ul>
-          </div>
-          <div class="col-sm-6 col-md-3 item">
-            <h3   data-aos="fade-right">About us</h3>
-            <ul  data-aos="zoom-in">
-              <li><a href="about.html">Company</a></li>
-              <li><a href="about.html">Team</a></li>
-            </ul>
-          </div>
-          <div class="col-md-6 item text">
-            <h3  data-aos="fade-right"> 
-               <i class="fa-solid fa-dragon"></i>
-              amadeusX</h3>
-            <!-- <a href="https://www.flaticon.com/free-icons/blockchain" title="blockchain icons">Blockchain icons created by photo3idea_studio - Flaticon</a> -->
-            <p  data-aos="zoom-in">
-              The amadeusX platform is a leading Document Verification platform
-              Designed to bring efficiency and security to your operations. 
-            </p>
-          </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-5 col-md-12">
+                    <div class="footer-brand">
+                        <i class="fa-solid fa-dragon text-gradient"></i>
+                        <span>amadeus<span class="text-gradient">X</span></span>
+                    </div>
+                    <p class="text-muted mb-4 pe-lg-5">
+                        Pioneering the standard for decentralized document verification. 
+                        Join us in building a more trustworthy digital future.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px; padding: 0; display: grid; place-items: center;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px; padding: 0; display: grid; place-items: center;"><i class="fab fa-github"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px; padding: 0; display: grid; place-items: center;"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 footer-links">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#">Verification API</a></li>
+                        <li><a href="#">Blockchain Explorer</a></li>
+                        <li><a href="#">Smart Contracts</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-6 footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-5 pt-4 text-center text-muted">
+                <p>&copy; 2024 amadeusX. All Rights Reserved.</p>
+            </div>
         </div>
-        <p class="copyright">amadeusX ©2024</p>
-      </div>
-
     </footer>
-<!-- End Footer -->    
-    <div >
-      <i onclick="topFunction()" id="scroll-btn" class="fa-solid fa-angle-up"></i>
-    </div>
-    <div><a href="mailto:adm.amadeusx@gmail.com?subject=From amadeusX Site"> 
-      <i class="mail-us fa-solid fa-headset"></i>
-    </a>
-    <script
-    src="https://code.jquery.com/jquery-3.6.0.js"
-    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>    <!-- Bootstrap framework -->
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/purecounter.min.js"></script>
     <script src="./js/aos.js"></script>
-    <script src="./js/script.js"></script>
-    <!-- <script defer>changeBackground();</script> -->
-    <!-- <div class="butterfly">
-    </div> -->
-
-    <script defer>
-      // const butterfly = document.querySelector(".butter");
-      //   setInterval(()=>{
-      //   butterfly.style.left = window.innerWidth*Math.random() +"px";
-      //   butterfly.style.top =  window.innerHeight*Math.random() + "px";
-      //   },4000)
-  $(".loader-wraper").fadeOut("slow");
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var typed = new Typed('.typed-text', {
-            strings: [
-                'trust^1000',
-                'security^1000',
-                'confidence^1000',
-                'reliability^1000',
-                'authenticity^1000'
-            ],
-            typeSpeed: 50,
-            backSpeed: 30,
-            backDelay: 1000,
-            loop: true,
-            showCursor: true,
-            cursorChar: '|'
-        });
-    });
-    </script>
+    <script src="./js/script.js"></script>
 
-  </body>
+    <script>
+        // Init AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Init Typed.js
+        document.addEventListener('DOMContentLoaded', function() {
+            var typed = new Typed('.typed-text', {
+                strings: [
+                    'Trust',
+                    'Security',
+                    'Confidence',
+                    'Reliability',
+                    'Authenticity'
+                ],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true,
+                showCursor: true,
+                cursorChar: '|'
+            });
+        });
+    </script>
+</body>
 </html>
